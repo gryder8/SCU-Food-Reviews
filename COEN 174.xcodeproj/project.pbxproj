@@ -7,13 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		862E79B32980932D004FCF12 /* APIDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862E79B22980932D004FCF12 /* APIDataModel.swift */; };
+		862E79B6298093D9004FCF12 /* APIDataTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862E79B5298093D9004FCF12 /* APIDataTypes.swift */; };
+		862E79B929809664004FCF12 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862E79B829809664004FCF12 /* Utils.swift */; };
+		862E79BB29809948004FCF12 /* MealHomeViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862E79BA29809948004FCF12 /* MealHomeViewCell.swift */; };
+		862E79BD29809A09004FCF12 /* FiveStarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862E79BC29809A09004FCF12 /* FiveStarView.swift */; };
 		865D24A22970CD3600C8B2E2 /* COEN_174App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865D24A12970CD3600C8B2E2 /* COEN_174App.swift */; };
-		865D24A42970CD3600C8B2E2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865D24A32970CD3600C8B2E2 /* ContentView.swift */; };
+		865D24A42970CD3600C8B2E2 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865D24A32970CD3600C8B2E2 /* HomeView.swift */; };
 		865D24A62970CD3800C8B2E2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 865D24A52970CD3800C8B2E2 /* Assets.xcassets */; };
 		865D24A92970CD3800C8B2E2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 865D24A82970CD3800C8B2E2 /* Preview Assets.xcassets */; };
 		865D24B32970CD3800C8B2E2 /* COEN_174Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865D24B22970CD3800C8B2E2 /* COEN_174Tests.swift */; };
 		865D24BD2970CD3800C8B2E2 /* COEN_174UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865D24BC2970CD3800C8B2E2 /* COEN_174UITests.swift */; };
 		865D24BF2970CD3800C8B2E2 /* COEN_174UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865D24BE2970CD3800C8B2E2 /* COEN_174UITestsLaunchTests.swift */; };
+		868CCD162980A04B00A1EC21 /* StarRating in Frameworks */ = {isa = PBXBuildFile; productRef = 868CCD152980A04B00A1EC21 /* StarRating */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,9 +40,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		862E79B22980932D004FCF12 /* APIDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIDataModel.swift; sourceTree = "<group>"; };
+		862E79B5298093D9004FCF12 /* APIDataTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIDataTypes.swift; sourceTree = "<group>"; };
+		862E79B729809595004FCF12 /* COEN-174-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "COEN-174-Info.plist"; sourceTree = SOURCE_ROOT; };
+		862E79B829809664004FCF12 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		862E79BA29809948004FCF12 /* MealHomeViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealHomeViewCell.swift; sourceTree = "<group>"; };
+		862E79BC29809A09004FCF12 /* FiveStarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiveStarView.swift; sourceTree = "<group>"; };
 		865D249E2970CD3600C8B2E2 /* COEN 174.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "COEN 174.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		865D24A12970CD3600C8B2E2 /* COEN_174App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COEN_174App.swift; sourceTree = "<group>"; };
-		865D24A32970CD3600C8B2E2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		865D24A32970CD3600C8B2E2 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		865D24A52970CD3800C8B2E2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		865D24A82970CD3800C8B2E2 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		865D24AE2970CD3800C8B2E2 /* COEN 174Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "COEN 174Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -51,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				868CCD162980A04B00A1EC21 /* StarRating in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +84,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		862E79B129809315004FCF12 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				865D24A32970CD3600C8B2E2 /* HomeView.swift */,
+				862E79BA29809948004FCF12 /* MealHomeViewCell.swift */,
+				862E79BC29809A09004FCF12 /* FiveStarView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		862E79B4298093C7004FCF12 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				862E79B22980932D004FCF12 /* APIDataModel.swift */,
+				862E79B5298093D9004FCF12 /* APIDataTypes.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		865D24952970CD3600C8B2E2 = {
 			isa = PBXGroup;
 			children = (
@@ -94,8 +126,11 @@
 		865D24A02970CD3600C8B2E2 /* COEN 174 */ = {
 			isa = PBXGroup;
 			children = (
+				862E79B729809595004FCF12 /* COEN-174-Info.plist */,
 				865D24A12970CD3600C8B2E2 /* COEN_174App.swift */,
-				865D24A32970CD3600C8B2E2 /* ContentView.swift */,
+				862E79B829809664004FCF12 /* Utils.swift */,
+				862E79B4298093C7004FCF12 /* Models */,
+				862E79B129809315004FCF12 /* Views */,
 				865D24A52970CD3800C8B2E2 /* Assets.xcassets */,
 				865D24A72970CD3800C8B2E2 /* Preview Content */,
 			);
@@ -143,6 +178,9 @@
 			dependencies = (
 			);
 			name = "COEN 174";
+			packageProductDependencies = (
+				868CCD152980A04B00A1EC21 /* StarRating */,
+			);
 			productName = "COEN 174";
 			productReference = 865D249E2970CD3600C8B2E2 /* COEN 174.app */;
 			productType = "com.apple.product-type.application";
@@ -215,6 +253,9 @@
 				Base,
 			);
 			mainGroup = 865D24952970CD3600C8B2E2;
+			packageReferences = (
+				868CCD142980A04B00A1EC21 /* XCRemoteSwiftPackageReference "StarRating" */,
+			);
 			productRefGroup = 865D249F2970CD3600C8B2E2 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -257,8 +298,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				865D24A42970CD3600C8B2E2 /* ContentView.swift in Sources */,
+				862E79BB29809948004FCF12 /* MealHomeViewCell.swift in Sources */,
+				862E79B929809664004FCF12 /* Utils.swift in Sources */,
+				865D24A42970CD3600C8B2E2 /* HomeView.swift in Sources */,
+				862E79B32980932D004FCF12 /* APIDataModel.swift in Sources */,
+				862E79B6298093D9004FCF12 /* APIDataTypes.swift in Sources */,
 				865D24A22970CD3600C8B2E2 /* COEN_174App.swift in Sources */,
+				862E79BD29809A09004FCF12 /* FiveStarView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -420,7 +466,7 @@
 				DEVELOPMENT_TEAM = LTHP4N872E;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_FILE = "COEN-174-Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -449,7 +495,7 @@
 				DEVELOPMENT_TEAM = LTHP4N872E;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_FILE = "COEN-174-Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -583,6 +629,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		868CCD142980A04B00A1EC21 /* XCRemoteSwiftPackageReference "StarRating" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dkk/StarRating";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		868CCD152980A04B00A1EC21 /* StarRating */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 868CCD142980A04B00A1EC21 /* XCRemoteSwiftPackageReference "StarRating" */;
+			productName = StarRating;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 865D24962970CD3600C8B2E2 /* Project object */;
 }

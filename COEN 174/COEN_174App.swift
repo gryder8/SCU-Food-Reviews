@@ -9,9 +9,14 @@ import SwiftUI
 
 @main
 struct COEN_174App: App {
+    @StateObject private var apiModel = APIDataModel.shared
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationStack {
+                HomeView()
+                    .environmentObject(apiModel)
+            }
         }
     }
 }
