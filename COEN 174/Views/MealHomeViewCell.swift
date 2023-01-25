@@ -14,21 +14,22 @@ struct MealHomeViewCell: View {
     var body: some View {
         VStack (alignment: .center){
             Text(food.name)
-                .font(.title3)
+                .font(.title)
                 .multilineTextAlignment(.leading)
                 .padding(.leading, 0)
             HStack (spacing: 0){
                 Text(String(format: "(%.2f)", food.rating))
-                    .font(.system(size: 14).italic())
+                    .font(.system(size: 18).italic())
                     .foregroundColor(.gray)
                     //.padding(.bottom, 18)
                 FiveStarView(rating: food.rating)
-                    .frame(minWidth: 50, idealWidth: 100, maxWidth: 150, minHeight: 15, idealHeight: 30, maxHeight: 40, alignment: .leading)
+                    .frame(minWidth: 100, idealWidth: 150, maxWidth: 150, minHeight: 30, idealHeight: 40, maxHeight: 40, alignment: .leading)
                     .padding(.bottom, -15)
             }
+            .padding(.horizontal, 30)
             
         }
-        .padding(15)
+        .padding(.vertical, 15)
         .background(.ultraThickMaterial)
         .cornerRadius(10)
     }

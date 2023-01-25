@@ -10,12 +10,14 @@ import SwiftUI
 @main
 struct COEN_174App: App {
     @StateObject private var apiModel = APIDataModel.shared
+    @StateObject private var navModel = NavigationModel()
     
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
+            NavigationStack(path: $navModel.navPath) {
                 HomeView()
                     .environmentObject(apiModel)
+                    .environmentObject(navModel)
             }
         }
     }

@@ -10,15 +10,18 @@ import SwiftUI
 struct HomeView: View {
     
     @EnvironmentObject private var apiModel: APIDataModel
+    @EnvironmentObject private var navModel: NavigationModel
     
     var body: some View {
         List(apiModel.meals) { meal in
             HStack {
                 Spacer()
-                NavigationLink(value: meal) {
+                Button {
+                    navModel.navPath.append(meal)
+                } label: {
                     MealHomeViewCell(food: meal)
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(.plain)
                 Spacer()
             }
             .listRowSeparator(Visibility.hidden)

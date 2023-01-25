@@ -20,6 +20,7 @@
 		865D24BD2970CD3800C8B2E2 /* COEN_174UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865D24BC2970CD3800C8B2E2 /* COEN_174UITests.swift */; };
 		865D24BF2970CD3800C8B2E2 /* COEN_174UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865D24BE2970CD3800C8B2E2 /* COEN_174UITestsLaunchTests.swift */; };
 		868CCD162980A04B00A1EC21 /* StarRating in Frameworks */ = {isa = PBXBuildFile; productRef = 868CCD152980A04B00A1EC21 /* StarRating */; };
+		868CCD182980B3C500A1EC21 /* NavigationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868CCD172980B3C500A1EC21 /* NavigationModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 		865D24B82970CD3800C8B2E2 /* COEN 174UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "COEN 174UITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		865D24BC2970CD3800C8B2E2 /* COEN_174UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COEN_174UITests.swift; sourceTree = "<group>"; };
 		865D24BE2970CD3800C8B2E2 /* COEN_174UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COEN_174UITestsLaunchTests.swift; sourceTree = "<group>"; };
+		868CCD172980B3C500A1EC21 /* NavigationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 			children = (
 				862E79B22980932D004FCF12 /* APIDataModel.swift */,
 				862E79B5298093D9004FCF12 /* APIDataTypes.swift */,
+				868CCD172980B3C500A1EC21 /* NavigationModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -299,6 +302,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				862E79BB29809948004FCF12 /* MealHomeViewCell.swift in Sources */,
+				868CCD182980B3C500A1EC21 /* NavigationModel.swift in Sources */,
 				862E79B929809664004FCF12 /* Utils.swift in Sources */,
 				865D24A42970CD3600C8B2E2 /* HomeView.swift in Sources */,
 				862E79B32980932D004FCF12 /* APIDataModel.swift in Sources */,
