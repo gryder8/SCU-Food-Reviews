@@ -100,6 +100,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		860516C1298A1B6F00550F9A /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				860D157D2989C61300C97E56 /* RatingView.swift */,
+				862E79BC29809A09004FCF12 /* FiveStarView.swift */,
+				860516BF298A004300550F9A /* RatingSubmissionView.swift */,
+				860516BB2989FA4200550F9A /* LoadingView.swift */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
 		860D157A29899E0C00C97E56 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -115,10 +126,7 @@
 				860D157B2989AAA900C97E56 /* FoodDetailView.swift */,
 				860516BD2989FF2100550F9A /* NewReviewView.swift */,
 				862E79BA29809948004FCF12 /* MealHomeViewCell.swift */,
-				860D157D2989C61300C97E56 /* RatingView.swift */,
-				862E79BC29809A09004FCF12 /* FiveStarView.swift */,
-				860516BF298A004300550F9A /* RatingSubmissionView.swift */,
-				860516BB2989FA4200550F9A /* LoadingView.swift */,
+				860516C1298A1B6F00550F9A /* Utility */,
 			);
 			path = Views;
 			sourceTree = "<group>";
