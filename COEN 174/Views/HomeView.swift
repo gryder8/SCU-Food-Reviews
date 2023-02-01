@@ -9,30 +9,42 @@ import SwiftUI
 
 struct HomeView: View {
     
-    @EnvironmentObject private var apiModel: APIDataModel
+    @StateObject private var viewModel: ViewModel = ViewModel()
     @EnvironmentObject private var navModel: NavigationModel
     
     var body: some View {
-        List(apiModel.meals) { meal in
-            HStack {
-                Spacer()
-                Button {
-                    navModel.navPath.append(meal)
-                } label: {
-                    MealHomeViewCell(food: meal)
+        if (!viewModel.fetchingData) {
+            List(viewModel.displayData) { food in
+                HStack {
+                    Spacer()
+                    Button {
+                        navModel.navPath.append(food)
+                    } label: {
+                        MealHomeViewCell(food: food)
+                    }
+                    .buttonStyle(.plain)
+                    
+                    Spacer()
                 }
-                .buttonStyle(.plain)
-                Spacer()
+                .listRowSeparator(Visibility.hidden)
             }
-            .listRowSeparator(Visibility.hidden)
+            .transition(.opacity)
+            //MARK: - Nav Destination
+            .navigationDestination(for: Food.self) { food in
+                FoodDetailView(food: food)
+                    .environmentObject(navModel)
+            }
+            .listStyle(.inset)
+            .padding()
+            .navigationTitle("Today's Food") //not shown in preview
+            .onAppear {
+                viewModel.initialize()
+            }
+        } else {
+            LoadingView()
+                .navigationTitle("Today's Food")
+                .transition(.opacity)
         }
-        //MARK: - Nav Destinations
-        .navigationDestination(for: Food.self) { food in
-            Text("\(food.name) detail view here")
-        }
-        .listStyle(.inset)
-        .padding()
-        .navigationTitle("Today's Food") //not shown in preview
         
     }
 }

@@ -21,7 +21,6 @@ struct MealHomeViewCell: View {
                 Text(String(format: "(%.2f)", food.rating))
                     .font(.system(size: 18).italic())
                     .foregroundColor(.gray)
-                    //.padding(.bottom, 18)
                 FiveStarView(rating: food.rating)
                     .frame(minWidth: 100, idealWidth: 150, maxWidth: 150, minHeight: 30, idealHeight: 40, maxHeight: 40, alignment: .leading)
                     .padding(.bottom, -15)
@@ -35,8 +34,8 @@ struct MealHomeViewCell: View {
     }
 }
 
-struct MealHomeViewCell_Previews: PreviewProvider {
-    static var previews: some View {
-        MealHomeViewCell(food: Food(name: "Test", rating: 4.25))
-    }
-}
+//struct MealHomeViewCell_Previews: PreviewProvider {
+//    static var previews: some View {
+//        MealHomeViewCell(food: Food(name: "Test", rating: 4.25, totalReviews: 5))
+//    }
+//}
