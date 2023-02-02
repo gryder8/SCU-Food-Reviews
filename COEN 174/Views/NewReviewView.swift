@@ -19,7 +19,7 @@ struct NewReviewView: View {
     @State private var title: String = ""
     @State private var bodyText: String = ""
     
-    @State private var successText: String = ""
+    @State private var responseText: String = ""
     
     @EnvironmentObject private var navModel: NavigationModel
     
@@ -57,13 +57,22 @@ struct NewReviewView: View {
                         return
                     }
                     
-                    creator.submitReview(rating: self.currentRating!, text: self.bodyText, title: self.title, reviewId: UUID().uuidString, foodId: food.foodId, success: {
+                    creator.submitReview(rating: self.currentRating!, text: self.bodyText, title: self.title, reviewId: UUID().uuidString, foodId: food.foodId, completion: { result in
+                        
+                        switch result {
+                        case .failure(let error):
+                            print("Recieved error: \(error)")
+                            responseText = "An error occured, try again later"
+                        case .success(let code):
+                            print("Success! Code: \(code)")
+                            responseText = "Review Submitted!"
+                        }
                         let pathLen = navModel.navPath.count
-                        successText = "Review Submitted!"
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                             guard navModel.navPath.count == pathLen else { return } //avoid popping off the view if the user does it for us
                             navModel.navPath.removeLast()
                         }
+                        
                     })
                     
                 }
@@ -74,10 +83,10 @@ struct NewReviewView: View {
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
             
-            if (!successText.isEmpty) {
+            if (!responseText.isEmpty) {
                 HStack {
                     Spacer()
-                    Text(successText)
+                    Text(responseText)
                         .font(.headline)
                         .padding(.top)
                     Spacer()

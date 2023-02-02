@@ -14,7 +14,7 @@ class ReviewCreator {
     //TODO: Make PUT call to endpoint
     //https://www.simpleswiftguide.com/how-to-make-http-put-request-with-json-as-data-in-swift/
     
-    func submitReview(rating: Int, text: String, title: String, reviewId: String, foodId: String, success: @escaping () -> ()) {
+    func submitReview(rating: Int, text: String, title: String, reviewId: String, foodId: String, completion: @escaping (Result<Int, Error>) -> ()) {
         print("Submitting Review!")
         let apiEndpoint = baseURLString+"putReview"
         let url: URL = URL(string: apiEndpoint)!
@@ -32,18 +32,26 @@ class ReviewCreator {
             let data = try JSONSerialization.data(withJSONObject: jsonDict)
             
             URLSession.shared.uploadTask(with: request, from: data) { (responseData, response, error) in
+                let result: Result<Int, Error>
+
                 if let error = error {
                     print("Error with POST request: \(error)")
+                    completion(.failure(error))
                     return
                 }
                 
                 if let responseCode = (response as? HTTPURLResponse)?.statusCode, let responseData = responseData {
                     guard responseCode == 200 else {
                         print("Invalid response code: \(responseCode)")
+                        if responseCode >= 500 {
+                            completion(.failure(URLError(.badServerResponse)))
+                        } else {
+                            completion(.failure(URLError(.badURL)))
+                        }
                         return
                     }
-                    
-                    success()
+                    result = .success(responseCode)
+                    completion(result)
                     
                     if let responseJSONData = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) {
                         print("Response JSON data = \(responseJSONData)")
@@ -53,6 +61,7 @@ class ReviewCreator {
             
         } catch {
             print(error)
+            completion(.failure(error))
         }
         
         
