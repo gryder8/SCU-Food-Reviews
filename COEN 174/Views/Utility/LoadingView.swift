@@ -8,12 +8,15 @@
 import SwiftUI
 
 struct LoadingView: View {
+    
+    var text: String = "Loading..."
+    
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
                 .foregroundColor(.gray.opacity(0.4))
             ProgressView {
-                Text("Loading...")
+                Text(text)
                     .multilineTextAlignment(.center)
                     .font(.system(size: 12, design: .rounded))
                 

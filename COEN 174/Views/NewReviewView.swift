@@ -13,7 +13,7 @@ struct NewReviewView: View {
     
     @State private var showAlert = false
     
-    let creator = ReviewCreator()
+    @StateObject var creator = ReviewCreator()
     
     @State private var currentRating: Int?
     @State private var title: String = ""
@@ -53,6 +53,7 @@ struct NewReviewView: View {
             HStack {
                 Spacer()
                 Button("Submit") {
+                    hideKeyboard()
                     guard currentRating != nil, !title.isEmpty, !bodyText.isEmpty else {
                         showAlert = true
                         return
@@ -82,12 +83,23 @@ struct NewReviewView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .font(.system(size: 20, design: .rounded))
+                
+
+                
                 Spacer()
             }
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
             
-            if (!responseText.isEmpty) {
+            if (creator.submittingReview) {
+                HStack {
+                    Spacer()
+                    LoadingView(text: "Submitting...").padding(.top, 5)
+                    Spacer()
+                }
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+            } else if (!responseText.isEmpty) {
                 HStack {
                     Spacer()
                     Text(responseText)
