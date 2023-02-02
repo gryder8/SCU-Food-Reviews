@@ -17,15 +17,20 @@ class ViewModel: ObservableObject {
     @Published var fetchingData: Bool = false
     
     func fetchAllFoods() async {
-        await model.getAllFoods(success: {[weak self] foodArr in
-            print("Got success callback!")
-            self?.configDisplayData()
+        await model.getAllFoods(completion: {[weak self] result in
+            
+            switch result {
+            case .success(let food):
+                print("Successful API call! Found \(food.count) foods.")
+                self?.configDisplayData()
+            case .failure(let error):
+                print("Failed with error: \(error)")
+            }
         })
     }
     
     
-    public init(){
-    }
+    public init(){}
     
     public func refresh() {
         configDisplayData()

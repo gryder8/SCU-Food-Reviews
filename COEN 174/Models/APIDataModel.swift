@@ -40,7 +40,7 @@ class APIDataModel: ObservableObject {
 //        }
 //    }
     
-    func getAllFoods(success: @escaping (_ result: [Food]) -> ()) async {
+    func getAllFoods(completion: @escaping (Result<[Food], Error>) -> ()) async {
         let urlEndpointString = baseURLString+"getAllFood"
         let url: URL = URL(string: urlEndpointString)!
         
@@ -60,14 +60,21 @@ class APIDataModel: ObservableObject {
             print(allFood)
             DispatchQueue.main.async {
                 self.foods = allFood.foods
-                success(allFood.foods)
+                completion(.success(allFood.foods))
                 print("Foods now has \(self.foods.count) entries")
             }
             isFetchingAllFoods = false
             
         } catch {
-            print("API call or decoding failed!\n\(error)")
+            if let err = error as? URLError {
+                print("API call failed!\n\(error)")
+                completion(.failure(err))
+            } else {
+                print("Decoding failed!\n\(error)")
+                completion(.failure(error))
+            }
             isFetchingAllFoods = false
+                
         }
         
     }
