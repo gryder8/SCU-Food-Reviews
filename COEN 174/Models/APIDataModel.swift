@@ -87,7 +87,7 @@ class APIDataModel: ObservableObject {
     func getReviewsForFood(with foodID: String, completion: @escaping (Result<[Review], Error>) -> ()) async {
         let urlEndpointString = baseURLString+"getReviewsByFood"
         let endpointURL: URL = URL(string: urlEndpointString)!
-        print("Using URL: \(endpointURL)")
+        print("Using URL: \(endpointURL) with foodID: \(foodID)")
         var request = URLRequest(url: endpointURL)
         request.httpMethod = "POST"
         request.allHTTPHeaderFields = [
@@ -114,7 +114,7 @@ class APIDataModel: ObservableObject {
                 
                 if let responseCode = (response as? HTTPURLResponse)?.statusCode {
                     guard responseCode == 200 else {
-                        print("Invalid response code for get reviews for food: \(responseCode)")
+                        print("Invalid response code for get reviews for food: \(responseCode) with id: \(foodID)")
                         if responseCode >= 500 {
                             completion(.failure(URLError(.badServerResponse)))
                         } else {
@@ -125,6 +125,10 @@ class APIDataModel: ObservableObject {
                 }
                 
                 guard let responseData = responseData else { return }
+                
+                if let responseJSONData = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) {
+                    print("Response JSON data = \n\(responseJSONData)")
+                }
                 
                 ///Try decoding data
                 do {

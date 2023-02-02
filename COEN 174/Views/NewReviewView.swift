@@ -22,6 +22,7 @@ struct NewReviewView: View {
     @State private var responseText: String = ""
     
     @EnvironmentObject private var navModel: NavigationModel
+    @EnvironmentObject private var viewModel: ViewModel
     
     var body: some View {
         Form {
@@ -64,6 +65,9 @@ struct NewReviewView: View {
                             print("Recieved error: \(error)")
                             responseText = "An error occured, try again later"
                         case .success(let code):
+                            Task.init(priority: .userInitiated) {
+                                await viewModel.queryReviewsForFoodFromServer(with:food.foodId, refreshing: true)
+                            }
                             print("Success! Code: \(code)")
                             responseText = "Review Submitted!"
                         }

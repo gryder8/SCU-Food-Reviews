@@ -51,7 +51,6 @@ struct Review: Identifiable, Hashable, Codable {
     var id: String {
         return reviewId
     }
-    let userId: String
     let foodId: String
     let rating: Int
     let body: String?

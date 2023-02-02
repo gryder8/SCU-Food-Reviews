@@ -13,14 +13,17 @@ class ViewModel: ObservableObject {
     
     private var initiallyFetched = false
     
+    private let INIT_ANIM_DURATION = 0.75
+    
     @Published var displayData: [Food] = []
     @Published var fetchingData: Bool = false
+    @Published var fetchingReviews: Bool = false
     
     @Published var reviewsForCurrentFood: [Review] = []
     
-    func getReviewsForFood(with foodId: String, refreshing: Bool = false) async {
+    func queryReviewsForFoodFromServer(with foodId: String, refreshing: Bool = false) async {
         DispatchQueue.main.async { [weak self] in
-            self?.fetchingData = true
+            self?.fetchingReviews = true
         }
         if let reviews = model.foodReviews[foodId], !refreshing { //utilize cache held by APIModel
             DispatchQueue.main.async {
@@ -36,20 +39,20 @@ class ViewModel: ObservableObject {
                 DispatchQueue.main.async { [weak self] in
                     self?.reviewsForCurrentFood = reviews
                     print("Assigned \(reviews.count) reviews for current food!")
+                    withAnimation(.easeIn) {
+                        self?.fetchingReviews = false
+                    }
                 }
             case .failure(let error):
                 print("Failed with error: \(error)")
                 
             }
         })
-        DispatchQueue.main.async { [weak self] in
-            self?.fetchingData = false
-        }
     }
     
-    func loadReviewsForFood(with id: String) {
+    func loadReviewsForFood(with foodId: String) {
         DispatchQueue.main.async { [weak self] in
-            self?.reviewsForCurrentFood = self?.model.foodReviews[id] ?? []
+            self?.reviewsForCurrentFood = self?.model.foodReviews[foodId] ?? []
         }
     }
     
@@ -77,23 +80,31 @@ class ViewModel: ObservableObject {
         guard !model.isFetchingAllFoods, !initiallyFetched else { return }
         if (forceRefresh) {
             DispatchQueue.main.async { [self] in
-                fetchingData = true
+                withAnimation(.easeInOut) {
+                    fetchingData = true
+                }
             }
             Task {
                 await fetchAllFoods()
                 DispatchQueue.main.async { [self] in
-                    fetchingData = false
+                    withAnimation(.linear(duration: INIT_ANIM_DURATION)) {
+                        fetchingData = false
+                    }
                 }
             }
             
         } else if (model.foods.isEmpty && !initiallyFetched) {
             DispatchQueue.main.async { [self] in
-                fetchingData = true
+                withAnimation(.easeInOut) {
+                    fetchingData = true
+                }
             }
             Task {
                 await fetchAllFoods()
                 DispatchQueue.main.async { [self] in
-                    fetchingData = false
+                    withAnimation(.linear(duration: INIT_ANIM_DURATION)) {
+                        fetchingData = false
+                    }
                 }
             }
             initiallyFetched = true

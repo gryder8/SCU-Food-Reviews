@@ -21,7 +21,7 @@ struct HomeView: View {
                         Spacer()
                         Button {
                             Task {
-                                await viewModel.getReviewsForFood(with: food.foodId, refreshing: true)
+                                await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
                             }
                             navModel.navPath.append(food)
                         } label: {

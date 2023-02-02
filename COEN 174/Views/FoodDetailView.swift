@@ -13,11 +13,18 @@ private struct ReviewView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
+            if let title = review.title {
+                Text(title)
+                    .font(.title3)
+                    .padding(.vertical, -5)
+            }
             RatingView(rating: Double(review.rating), showRatingNum: false)
                 .padding(.leading, -15)
                 .listRowSeparator(.hidden)
-            Text(review.body ?? "")
-                .font(.system(size: 16, design: .rounded))
+            if let body = review.body {
+                Text(body)
+                    .font(.system(size: 16, design: .rounded))
+            }
         }
     }
 }
@@ -51,14 +58,20 @@ struct FoodDetailView: View {
                 .navigationDestination(for: NewReview.self) { _ in
                     NewReviewView(food: self.food)
                         .environmentObject(navModel)
+                        .environmentObject(viewModel)
                 }
                 
                 
-                Text(food.totalReviews != 1 ? "\(food.totalReviews) Reviews" : "\(food.totalReviews) Review")
-                if viewModel.fetchingData {
-                    LoadingView()
-                        .transition(.opacity)
+                if viewModel.fetchingReviews {
+                    HStack {
+                        Spacer()
+                        LoadingView()
+                            .transition(.opacity)
+                        Spacer()
+                    }
+                    .padding(.top)
                 } else if (!viewModel.reviewsForCurrentFood.isEmpty) {
+                    Text(food.totalReviews != 1 ? "\(food.totalReviews) Reviews" : "\(food.totalReviews) Review")
                     Text("Reviews")
                         .font(.title)
                         .padding(.top)
