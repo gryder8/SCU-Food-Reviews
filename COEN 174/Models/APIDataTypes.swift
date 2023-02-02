@@ -56,6 +56,14 @@ struct Review: Identifiable, Hashable, Codable {
     let body: String?
     let title: String?
     let dateCreated: String
+    
+    var date: Date? {
+        return dateFromAPIDateString(dateCreated)
+    }
+    
+    var relativeDescription: String? {
+        return date?.formattedForUIDisplay()
+    }
 }
 
 struct ReviewsResponse: Codable {

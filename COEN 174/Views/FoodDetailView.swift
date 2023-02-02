@@ -25,6 +25,12 @@ private struct ReviewView: View {
                 Text(body)
                     .font(.system(size: 16, design: .rounded))
             }
+            if let relativeDesc = review.relativeDescription {
+                Text(relativeDesc)
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                    .padding(.top, 5)
+            }
         }
     }
 }
@@ -76,7 +82,7 @@ struct FoodDetailView: View {
                         .font(.title)
                         .padding(.top)
                     
-                    List(viewModel.reviewsForCurrentFood) { review in
+                    List(viewModel.reviewsForCurrentFood.sortedByDate()) { review in
                         ReviewView(review: review)
                     }
                     .listStyle(.inset)
