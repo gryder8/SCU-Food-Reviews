@@ -51,6 +51,14 @@ struct Review: Identifiable, Hashable, Codable {
     var id: String {
         return reviewId
     }
-    let text: String
-    let rating: Double
+    let userId: String
+    let foodId: String
+    let rating: Int
+    let body: String?
+    let title: String?
+    let dateCreated: String
+}
+
+struct ReviewsResponse: Codable {
+    let reviews: [Review]
 }

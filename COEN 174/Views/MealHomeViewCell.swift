@@ -5,6 +5,7 @@
 //  Created by Gavin Ryder on 1/24/23.
 //
 
+import Foundation
 import SwiftUI
 
 struct MealHomeViewCell: View {
@@ -18,7 +19,7 @@ struct MealHomeViewCell: View {
                 .multilineTextAlignment(.leading)
                 .padding(.leading, 0)
             HStack (spacing: 0){
-                Text(String(format: "(%.2f)", food.rating))
+                Text(String(format: "(%.1f)", food.rating))
                     .font(.system(size: 18).italic())
                     .foregroundColor(.gray)
                 FiveStarView(rating: food.rating)
@@ -29,8 +30,8 @@ struct MealHomeViewCell: View {
             
         }
         .padding(.vertical, 15)
-        .background(.ultraThickMaterial)
-        .cornerRadius(10)
+        .background(.thinMaterial)
+        .cornerRadius(20)
     }
 }
 

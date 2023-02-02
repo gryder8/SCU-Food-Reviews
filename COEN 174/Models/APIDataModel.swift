@@ -19,10 +19,14 @@ class APIDataModel: ObservableObject {
     }
     static let shared = APIDataModel()
     
-    public var isFetchingAllFoods = false
+    var isFetchingAllFoods = false
+    var isFetchingReview = false
     
     //MARK: - Published Fields
     @Published var foods: [Food] = [Food]()
+    
+    ///foodId: [Review]
+    @Published var foodReviews: [String : [Review]] = [:]
     
     //TODO: This belongs in ViewModel
 
@@ -52,6 +56,7 @@ class APIDataModel: ObservableObject {
                 guard httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299 else {
                     print("***Error: Status \(httpResponse.statusCode)")
                     isFetchingAllFoods = false
+                    completion(.failure(URLError(.badServerResponse)))
                     return
                 }
             }
@@ -76,10 +81,69 @@ class APIDataModel: ObservableObject {
             isFetchingAllFoods = false
                 
         }
-        
     }
     
-
     
-    
+    func getReviewsForFood(with foodID: String, completion: @escaping (Result<[Review], Error>) -> ()) async {
+        let urlEndpointString = baseURLString+"getReviewsByFood"
+        let endpointURL: URL = URL(string: urlEndpointString)!
+        print("Using URL: \(endpointURL)")
+        var request = URLRequest(url: endpointURL)
+        request.httpMethod = "POST"
+        request.allHTTPHeaderFields = [
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        ]
+        
+        let jsonDict:[String:Any] = [
+            "foodId": foodID
+        ]
+        
+        ///Try requesting data from the server
+        do {
+            let data = try JSONSerialization.data(withJSONObject: jsonDict)
+            
+            URLSession.shared.uploadTask(with: request, from: data) { (responseData, response, error) in
+                //let result: Result<[Review], Error>
+                
+                if let error = error {
+                    print("Error with POST request: \(error)")
+                    completion(.failure(error))
+                    return
+                }
+                
+                if let responseCode = (response as? HTTPURLResponse)?.statusCode {
+                    guard responseCode == 200 else {
+                        print("Invalid response code for get reviews for food: \(responseCode)")
+                        if responseCode >= 500 {
+                            completion(.failure(URLError(.badServerResponse)))
+                        } else {
+                            completion(.failure(URLError(.badURL)))
+                        }
+                        return
+                    }
+                }
+                
+                guard let responseData = responseData else { return }
+                
+                ///Try decoding data
+                do {
+                    let allReviewsForFood: ReviewsResponse = try JSONDecoder().decode(ReviewsResponse.self, from: responseData)
+                    print(allReviewsForFood)
+                    DispatchQueue.main.async { [weak self] in
+                        self?.foodReviews[foodID] = allReviewsForFood.reviews
+                        completion(.success(allReviewsForFood.reviews))
+                        print("Found \(allReviewsForFood.reviews.count) reviews for foodId: \(foodID)")
+                    }
+                } catch {
+                    print(error)
+                    completion(.failure(error))
+                }
+            }.resume()
+            
+        } catch {
+            print(error)
+            completion(.failure(error))
+        }
+    }
 }

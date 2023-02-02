@@ -13,39 +13,48 @@ struct HomeView: View {
     @EnvironmentObject private var navModel: NavigationModel
     
     var body: some View {
-        if (!viewModel.fetchingData) {
-            List(viewModel.displayData) { food in
-                HStack {
-                    Spacer()
-                    Button {
-                        navModel.navPath.append(food)
-                    } label: {
-                        MealHomeViewCell(food: food)
+        ZStack {
+            AppBackground()
+            if (!viewModel.fetchingData) {
+                List(viewModel.displayData) { food in
+                    HStack {
+                        Spacer()
+                        Button {
+                            Task {
+                                await viewModel.getReviewsForFood(with: food.foodId, refreshing: true)
+                            }
+                            navModel.navPath.append(food)
+                        } label: {
+                            MealHomeViewCell(food: food)
+                        }
+                        .listRowBackground(Color.clear)
+                        .buttonStyle(.plain)
+                        
+                        Spacer()
                     }
-                    .buttonStyle(.plain)
-                    
-                    Spacer()
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(Visibility.hidden)
                 }
-                .listRowSeparator(Visibility.hidden)
-            }
-            .transition(.opacity)
-            //MARK: - Nav Destination
-            .navigationDestination(for: Food.self) { food in
-                FoodDetailView(food: food)
-                    .environmentObject(navModel)
-            }
-            .listStyle(.inset)
-            .padding()
-            .navigationTitle("Today's Food") //not shown in preview
-            .onAppear {
-                viewModel.initialize()
-            }
-        } else {
-            LoadingView()
-                .navigationTitle("Today's Food")
+                .scrollContentBackground(.hidden)
                 .transition(.opacity)
+                //MARK: - Nav Destination
+                .navigationDestination(for: Food.self) { food in
+                    FoodDetailView(food: food)
+                        .environmentObject(navModel)
+                        .environmentObject(viewModel)
+                }
+                .listStyle(.inset)
+                .padding()
+                .navigationTitle("Today's Food") //not shown in preview
+                .onAppear {
+                    viewModel.initialize()
+                }
+            } else {
+                LoadingView()
+                    .navigationTitle("Today's Food")
+                    .transition(.opacity)
+            }
         }
-        
     }
 }
 

@@ -16,6 +16,43 @@ class ViewModel: ObservableObject {
     @Published var displayData: [Food] = []
     @Published var fetchingData: Bool = false
     
+    @Published var reviewsForCurrentFood: [Review] = []
+    
+    func getReviewsForFood(with foodId: String, refreshing: Bool = false) async {
+        DispatchQueue.main.async { [weak self] in
+            self?.fetchingData = true
+        }
+        if let reviews = model.foodReviews[foodId], !refreshing { //utilize cache held by APIModel
+            DispatchQueue.main.async {
+                self.reviewsForCurrentFood = reviews
+            }
+            print("Using existing data!")
+            return
+        }
+        
+        await model.getReviewsForFood(with: foodId, completion: { [weak self] result in
+            switch result {
+            case .success(let reviews):
+                DispatchQueue.main.async { [weak self] in
+                    self?.reviewsForCurrentFood = reviews
+                    print("Assigned \(reviews.count) reviews for current food!")
+                }
+            case .failure(let error):
+                print("Failed with error: \(error)")
+                
+            }
+        })
+        DispatchQueue.main.async { [weak self] in
+            self?.fetchingData = false
+        }
+    }
+    
+    func loadReviewsForFood(with id: String) {
+        DispatchQueue.main.async { [weak self] in
+            self?.reviewsForCurrentFood = self?.model.foodReviews[id] ?? []
+        }
+    }
+    
     func fetchAllFoods() async {
         await model.getAllFoods(completion: {[weak self] result in
             

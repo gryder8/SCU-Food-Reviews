@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension Date {
     var descriptionString: String {
@@ -14,5 +15,12 @@ extension Date {
         dateFormatter.timeStyle = .none
         dateFormatter.locale = Locale(identifier: "en_US")
         return dateFormatter.string(from: self)
+    }
+}
+
+struct AppBackground: View {
+    var body: some View {
+        LinearGradient(colors: [.accentColor.opacity(0.8), .accentColor.opacity(0.25)], startPoint: .top, endPoint: .bottom)
+            .edgesIgnoringSafeArea(.all)
     }
 }

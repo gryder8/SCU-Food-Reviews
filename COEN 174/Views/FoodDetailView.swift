@@ -13,10 +13,10 @@ private struct ReviewView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            RatingView(rating: review.rating, showRatingNum: false)
+            RatingView(rating: Double(review.rating), showRatingNum: false)
                 .padding(.leading, -15)
                 .listRowSeparator(.hidden)
-            Text(review.text)
+            Text(review.body ?? "")
                 .font(.system(size: 16, design: .rounded))
         }
     }
@@ -30,6 +30,7 @@ struct FoodDetailView: View {
     
     var food: Food
     @EnvironmentObject private var navModel: NavigationModel
+    @EnvironmentObject private var viewModel: ViewModel
     
     var body: some View {
         HStack {
@@ -54,13 +55,15 @@ struct FoodDetailView: View {
                 
                 
                 Text(food.totalReviews != 1 ? "\(food.totalReviews) Reviews" : "\(food.totalReviews) Review")
-                
-                if (food.totalReviews > 0) {
+                if viewModel.fetchingData {
+                    LoadingView()
+                        .transition(.opacity)
+                } else if (!viewModel.reviewsForCurrentFood.isEmpty) {
                     Text("Reviews")
                         .font(.title)
                         .padding(.top)
                     
-                    List(food.reviews) { review in
+                    List(viewModel.reviewsForCurrentFood) { review in
                         ReviewView(review: review)
                     }
                     .listStyle(.inset)
