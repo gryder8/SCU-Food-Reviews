@@ -78,13 +78,14 @@ class ReviewCreator {
     private func generateJSONDictForTransmission(rating: Int, text: String, title: String, reviewId: String, foodId: String) -> [String: Any] {
         let userID = "Gavin"
         let dict: [String: Any] = [
-            "reviewId":reviewId,
+            //"reviewId":reviewId,
             "userId":userID,
             "foodId":foodId,
             "rating":rating,
             "title":title,
             "body": text
         ]
+        print("Generated dict of \(dict.keys.count) keys for transmission")
         return dict
     }
     

@@ -68,7 +68,7 @@ struct NewReviewView: View {
                             responseText = "Review Submitted!"
                         }
                         let pathLen = navModel.navPath.count
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                             guard navModel.navPath.count == pathLen else { return } //avoid popping off the view if the user does it for us
                             navModel.navPath.removeLast()
                         }
@@ -89,6 +89,7 @@ struct NewReviewView: View {
                     Text(responseText)
                         .font(.headline)
                         .padding(.top)
+                        .foregroundColor(responseText.lowercased().contains("error") ? .red : .gray)
                     Spacer()
                 }
                 .listRowBackground(Color.clear)
