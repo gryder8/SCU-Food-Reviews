@@ -13,7 +13,7 @@ class ViewModel: ObservableObject {
     
     private var initiallyFetched = false
     
-    private let INIT_ANIM_DURATION = 0.75
+    private let INIT_ANIM_DURATION = 0.5
     
     @Published var displayData: [Food] = []
     @Published var fetchingData: Bool = false
