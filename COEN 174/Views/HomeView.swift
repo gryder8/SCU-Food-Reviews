@@ -35,6 +35,7 @@ struct HomeView: View {
                     .listRowBackground(Color.clear)
                     .listRowSeparator(Visibility.hidden)
                 }
+                .accessibilityIdentifier("foodList")
                 .scrollContentBackground(.hidden)
                 .transition(.opacity)
                 //MARK: - Nav Destination

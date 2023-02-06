@@ -18,15 +18,40 @@ final class COEN_174Tests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    func testFetch() async throws {
+        let model = APIDataModel.shared
+        await model.getAllFoods(completion: { result in
+            switch result {
+            case .success(let foods):
+                XCTAssert(foods.count > 0)
+            case .failure(let error):
+                XCTFail("API Call Failed! Error: \(error)")
+            }
+        })
+        
+        testSortsOnViewModel()
+                
+    }
+    
+    
+    ///Do not call standalone, API data must be fetched first
+    func testSortsOnViewModel() {
+        let vm = ViewModel()
+        XCTAssert(!vm.mealsSortedByName.isEmpty)
+        if let first = vm.mealsSortedByName.first, let last = vm.mealsSortedByName.last {
+            print(first.name)
+            print(last.name)
+            let comp = first.name.caseInsensitiveCompare(last.name)
+            XCTAssert(comp == .orderedAscending)
+        }
+        
+        if let first = vm.mealsSortedByRating.first, let last = vm.mealsSortedByRating.last {
+            XCTAssert(first.rating >= last.rating)
+        }
+        
     }
 
-    func testPerformanceExample() throws {
+    func testPerformanceExample() async throws {
         // This is an example of a performance test case.
         self.measure {
             // Put the code you want to measure the time of here.

@@ -19,6 +19,7 @@
 		862E79B929809664004FCF12 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862E79B829809664004FCF12 /* Utils.swift */; };
 		862E79BB29809948004FCF12 /* MealHomeViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862E79BA29809948004FCF12 /* MealHomeViewCell.swift */; };
 		862E79BD29809A09004FCF12 /* FiveStarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862E79BC29809A09004FCF12 /* FiveStarView.swift */; };
+		86403AE92991B447000644BA /* getAllFood.json in Resources */ = {isa = PBXBuildFile; fileRef = 86403AE82991B447000644BA /* getAllFood.json */; };
 		865D24A22970CD3600C8B2E2 /* COEN_174App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865D24A12970CD3600C8B2E2 /* COEN_174App.swift */; };
 		865D24A42970CD3600C8B2E2 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865D24A32970CD3600C8B2E2 /* HomeView.swift */; };
 		865D24A62970CD3800C8B2E2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 865D24A52970CD3800C8B2E2 /* Assets.xcassets */; };
@@ -61,6 +62,7 @@
 		862E79B829809664004FCF12 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		862E79BA29809948004FCF12 /* MealHomeViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealHomeViewCell.swift; sourceTree = "<group>"; };
 		862E79BC29809A09004FCF12 /* FiveStarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiveStarView.swift; sourceTree = "<group>"; };
+		86403AE82991B447000644BA /* getAllFood.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getAllFood.json; sourceTree = "<group>"; };
 		865D249E2970CD3600C8B2E2 /* COEN 174.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "COEN 174.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		865D24A12970CD3600C8B2E2 /* COEN_174App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COEN_174App.swift; sourceTree = "<group>"; };
 		865D24A32970CD3600C8B2E2 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 		865D24B12970CD3800C8B2E2 /* COEN 174Tests */ = {
 			isa = PBXGroup;
 			children = (
+				86403AE82991B447000644BA /* getAllFood.json */,
 				865D24B22970CD3800C8B2E2 /* COEN_174Tests.swift */,
 			);
 			path = "COEN 174Tests";
@@ -321,6 +324,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86403AE92991B447000644BA /* getAllFood.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

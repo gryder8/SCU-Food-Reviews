@@ -22,15 +22,22 @@ final class COEN_174UITests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testExample() throws {
+    func testLaunch() throws {
         // UI tests must launch the application that they test.
         let app = XCUIApplication()
+        app.launchArguments = ["UITesting"]
         app.launch()
+        
+        
+        if ProcessInfo.processInfo.arguments.contains("foodList") {
+            let list = app.scrollViews["foodList"]
+            XCTAssertTrue(list.exists)
+        }
 
         // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
 
-    func testLaunchPerformance() throws {
+    func testLaunchPerformanceAndStressTestAPI() throws {
         if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
             // This measures how long it takes to launch your application.
             measure(metrics: [XCTApplicationLaunchMetric()]) {
