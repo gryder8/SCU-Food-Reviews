@@ -13,7 +13,7 @@
 		860D157929899E0700C97E56 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860D157829899E0700C97E56 /* ViewModel.swift */; };
 		860D157C2989AAA900C97E56 /* FoodDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860D157B2989AAA900C97E56 /* FoodDetailView.swift */; };
 		860D157E2989C61300C97E56 /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860D157D2989C61300C97E56 /* RatingView.swift */; };
-		860D15802989D74300C97E56 /* ReviewCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860D157F2989D74300C97E56 /* ReviewCreator.swift */; };
+		860D15802989D74300C97E56 /* ReviewAndFoodCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860D157F2989D74300C97E56 /* ReviewAndFoodCreator.swift */; };
 		862E79B32980932D004FCF12 /* APIDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862E79B22980932D004FCF12 /* APIDataModel.swift */; };
 		862E79B6298093D9004FCF12 /* APIDataTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862E79B5298093D9004FCF12 /* APIDataTypes.swift */; };
 		862E79B929809664004FCF12 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862E79B829809664004FCF12 /* Utils.swift */; };
@@ -29,6 +29,8 @@
 		865D24BF2970CD3800C8B2E2 /* COEN_174UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865D24BE2970CD3800C8B2E2 /* COEN_174UITestsLaunchTests.swift */; };
 		868CCD162980A04B00A1EC21 /* StarRating in Frameworks */ = {isa = PBXBuildFile; productRef = 868CCD152980A04B00A1EC21 /* StarRating */; };
 		868CCD182980B3C500A1EC21 /* NavigationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868CCD172980B3C500A1EC21 /* NavigationModel.swift */; };
+		86FD928E299302D900A50AFD /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FD928D299302D900A50AFD /* Constants.swift */; };
+		86FD92902993069700A50AFD /* SubmitFoodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FD928F2993069700A50AFD /* SubmitFoodView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,7 +57,7 @@
 		860D157829899E0700C97E56 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		860D157B2989AAA900C97E56 /* FoodDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodDetailView.swift; sourceTree = "<group>"; };
 		860D157D2989C61300C97E56 /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
-		860D157F2989D74300C97E56 /* ReviewCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewCreator.swift; sourceTree = "<group>"; };
+		860D157F2989D74300C97E56 /* ReviewAndFoodCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewAndFoodCreator.swift; sourceTree = "<group>"; };
 		862E79B22980932D004FCF12 /* APIDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIDataModel.swift; sourceTree = "<group>"; };
 		862E79B5298093D9004FCF12 /* APIDataTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIDataTypes.swift; sourceTree = "<group>"; };
 		862E79B729809595004FCF12 /* COEN-174-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "COEN-174-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -74,6 +76,8 @@
 		865D24BC2970CD3800C8B2E2 /* COEN_174UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COEN_174UITests.swift; sourceTree = "<group>"; };
 		865D24BE2970CD3800C8B2E2 /* COEN_174UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COEN_174UITestsLaunchTests.swift; sourceTree = "<group>"; };
 		868CCD172980B3C500A1EC21 /* NavigationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationModel.swift; sourceTree = "<group>"; };
+		86FD928D299302D900A50AFD /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		86FD928F2993069700A50AFD /* SubmitFoodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitFoodView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				865D24A32970CD3600C8B2E2 /* HomeView.swift */,
+				86FD928F2993069700A50AFD /* SubmitFoodView.swift */,
 				860D157B2989AAA900C97E56 /* FoodDetailView.swift */,
 				860516BD2989FF2100550F9A /* NewReviewView.swift */,
 				862E79BA29809948004FCF12 /* MealHomeViewCell.swift */,
@@ -139,7 +144,7 @@
 				862E79B22980932D004FCF12 /* APIDataModel.swift */,
 				862E79B5298093D9004FCF12 /* APIDataTypes.swift */,
 				868CCD172980B3C500A1EC21 /* NavigationModel.swift */,
-				860D157F2989D74300C97E56 /* ReviewCreator.swift */,
+				860D157F2989D74300C97E56 /* ReviewAndFoodCreator.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -170,6 +175,7 @@
 				862E79B729809595004FCF12 /* COEN-174-Info.plist */,
 				865D24A12970CD3600C8B2E2 /* COEN_174App.swift */,
 				862E79B829809664004FCF12 /* Utils.swift */,
+				86FD928D299302D900A50AFD /* Constants.swift */,
 				862E79B4298093C7004FCF12 /* Models */,
 				860D157A29899E0C00C97E56 /* ViewModel */,
 				862E79B129809315004FCF12 /* Views */,
@@ -347,8 +353,9 @@
 				860D157929899E0700C97E56 /* ViewModel.swift in Sources */,
 				860516BE2989FF2100550F9A /* NewReviewView.swift in Sources */,
 				868CCD182980B3C500A1EC21 /* NavigationModel.swift in Sources */,
-				860D15802989D74300C97E56 /* ReviewCreator.swift in Sources */,
+				860D15802989D74300C97E56 /* ReviewAndFoodCreator.swift in Sources */,
 				862E79B929809664004FCF12 /* Utils.swift in Sources */,
+				86FD928E299302D900A50AFD /* Constants.swift in Sources */,
 				865D24A42970CD3600C8B2E2 /* HomeView.swift in Sources */,
 				862E79B32980932D004FCF12 /* APIDataModel.swift in Sources */,
 				862E79B6298093D9004FCF12 /* APIDataTypes.swift in Sources */,
@@ -356,6 +363,7 @@
 				862E79BD29809A09004FCF12 /* FiveStarView.swift in Sources */,
 				860516BC2989FA4200550F9A /* LoadingView.swift in Sources */,
 				860D157C2989AAA900C97E56 /* FoodDetailView.swift in Sources */,
+				86FD92902993069700A50AFD /* SubmitFoodView.swift in Sources */,
 				860516C0298A004300550F9A /* RatingSubmissionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

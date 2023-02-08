@@ -33,6 +33,31 @@ struct AppBackground: View {
     }
 }
 
+struct CheckboxStyle: ToggleStyle {
+    
+    func makeBody(configuration: Self.Configuration) -> some View {
+        
+        return HStack {
+            
+            configuration.label
+            
+            Spacer()
+            
+            Image(systemName: configuration.isOn ? "checkmark.circle.fill" : "circle")
+                .resizable()
+                .frame(width: 24, height: 24)
+                .foregroundColor(configuration.isOn ? .accentColor : .gray)
+                .font(.system(size: 20, weight: .bold, design: .default))
+                .onTapGesture {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        configuration.isOn.toggle()
+                    }
+                }
+        }
+        
+    }
+}
+
 public func dateFromAPIDateString(_ dateString: String) -> Date? {
     let dateFormatter = DateFormatter()
     

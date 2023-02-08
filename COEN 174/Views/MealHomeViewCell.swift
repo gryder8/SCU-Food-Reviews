@@ -13,7 +13,7 @@ struct MealHomeViewCell: View {
     let food: Food
     
     var body: some View {
-        VStack (alignment: .center){
+        VStack (alignment: .center, spacing: 5){
             Text(food.name)
                 .font(.title)
                 .multilineTextAlignment(.leading)
@@ -30,7 +30,7 @@ struct MealHomeViewCell: View {
             
         }
         .padding(.vertical, 15)
-        .background(.thinMaterial)
+        .background(Color.white.opacity(0.45))
         .cornerRadius(20)
     }
 }

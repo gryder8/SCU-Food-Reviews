@@ -13,7 +13,7 @@ struct NewReviewView: View {
     
     @State private var showAlert = false
     
-    @StateObject var creator = ReviewCreator()
+    @StateObject private var creator = ReviewAndFoodCreator()
     
     @State private var currentRating: Int?
     @State private var title: String = ""
@@ -53,33 +53,7 @@ struct NewReviewView: View {
             HStack {
                 Spacer()
                 Button("Submit") {
-                    hideKeyboard()
-                    guard currentRating != nil, !title.isEmpty, !bodyText.isEmpty else {
-                        showAlert = true
-                        return
-                    }
-                    
-                    creator.submitReview(rating: self.currentRating!, text: self.bodyText, title: self.title, reviewId: UUID().uuidString, foodId: food.foodId, completion: { result in
-                        
-                        switch result {
-                        case .failure(let error):
-                            print("Recieved error: \(error)")
-                            responseText = "An error occured, try again later"
-                        case .success(let code):
-                            Task.init(priority: .userInitiated) {
-                                await viewModel.queryReviewsForFoodFromServer(with:food.foodId, refreshing: true)
-                            }
-                            print("Success! Code: \(code)")
-                            responseText = "Review Submitted!"
-                        }
-                        let pathLen = navModel.navPath.count
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            guard navModel.navPath.count == pathLen else { return } //avoid popping off the view if the user does it for us
-                            navModel.navPath.removeLast()
-                        }
-                        
-                    })
-                    
+                    sendReview()
                 }
                 .buttonStyle(.borderedProminent)
                 .font(.system(size: 20, design: .rounded))
@@ -117,6 +91,35 @@ struct NewReviewView: View {
         .alert(isPresented: $showAlert) {
             Alert(title: Text("Error"), message: Text("Make sure all fields are filled out to submit your review!"), dismissButton: .default(Text("OK")))
         }
+    }
+    
+    func sendReview() {
+        hideKeyboard()
+        guard currentRating != nil, !title.isEmpty, !bodyText.isEmpty else {
+            showAlert = true
+            return
+        }
+        
+        creator.submitReview(rating: self.currentRating!, text: self.bodyText, title: self.title, reviewId: UUID().uuidString, foodId: food.foodId, completion: { result in
+            
+            switch result {
+            case .failure(let error):
+                print("Recieved error: \(error)")
+                responseText = "An error occured, try again later"
+            case .success(let code):
+                Task.init(priority: .userInitiated) {
+                    await viewModel.queryReviewsForFoodFromServer(with:food.foodId, refreshing: true)
+                }
+                print("Success! Code: \(code)")
+                responseText = "Review Submitted!"
+            }
+            let pathLen = navModel.navPath.count
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                guard navModel.navPath.count == pathLen else { return } //avoid popping off the view if the user does it for us
+                navModel.navPath.removeLast()
+            }
+            
+        })
     }
 }
 

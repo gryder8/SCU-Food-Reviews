@@ -12,43 +12,61 @@ struct HomeView: View {
     @StateObject private var viewModel: ViewModel = ViewModel()
     @EnvironmentObject private var navModel: NavigationModel
     
+    @State private var showingAddFoodCover = false
+    
     var body: some View {
         ZStack {
             AppBackground()
             if (!viewModel.fetchingData) {
-                List(viewModel.displayData) { food in
+                VStack {
                     HStack {
                         Spacer()
-                        Button {
-                            Task {
-                                await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
-                            }
-                            navModel.navPath.append(food)
-                        } label: {
-                            MealHomeViewCell(food: food)
+                        Button("Add A Food") {
+                            showingAddFoodCover.toggle()
                         }
-                        .listRowBackground(Color.clear)
-                        .buttonStyle(.plain)
-                        
+                        .buttonStyle(.borderedProminent)
+                        .padding(.trailing, 20)
                         Spacer()
                     }
-                    .listRowBackground(Color.clear)
-                    .listRowSeparator(Visibility.hidden)
+                    .padding(EdgeInsets(top: 10, leading: 0, bottom: -10, trailing: 0))
+                    
+                    List(viewModel.displayData) { food in
+                        HStack {
+                            Spacer()
+                            Button {
+                                Task {
+                                    await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
+                                }
+                                navModel.navPath.append(food)
+                            } label: {
+                                MealHomeViewCell(food: food)
+                            }
+                            .listRowBackground(Color.clear)
+                            .buttonStyle(.plain)
+                            
+                            Spacer()
+                        }
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(Visibility.hidden)
+                    }
+                    .accessibilityIdentifier("foodList")
+                    .scrollContentBackground(.hidden)
+                    .transition(.opacity)
+                    //MARK: - Nav Destination
+                    .navigationDestination(for: Food.self) { food in
+                        FoodDetailView(food: food)
+                            .environmentObject(navModel)
+                            .environmentObject(viewModel)
+                    }
+                    .listStyle(.inset)
+                    .padding()
+                    .navigationTitle("Today's Food") //not shown in preview
+                    .onAppear {
+                        viewModel.initialize()
                 }
-                .accessibilityIdentifier("foodList")
-                .scrollContentBackground(.hidden)
-                .transition(.opacity)
-                //MARK: - Nav Destination
-                .navigationDestination(for: Food.self) { food in
-                    FoodDetailView(food: food)
-                        .environmentObject(navModel)
-                        .environmentObject(viewModel)
                 }
-                .listStyle(.inset)
-                .padding()
-                .navigationTitle("Today's Food") //not shown in preview
-                .onAppear {
-                    viewModel.initialize()
+                .fullScreenCover(isPresented: $showingAddFoodCover) {
+                    SubmitFoodView()
                 }
             } else {
                 LoadingView()

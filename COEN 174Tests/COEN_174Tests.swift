@@ -34,7 +34,7 @@ final class COEN_174Tests: XCTestCase {
     }
     
     
-    ///Do not call standalone, API data must be fetched first
+    ///Precondition: Do not call standalone, API data must be fetched first! This method should be called by `testFetch()` after it passes
     func testSortsOnViewModel() {
         let vm = ViewModel()
         XCTAssert(!vm.mealsSortedByName.isEmpty)
