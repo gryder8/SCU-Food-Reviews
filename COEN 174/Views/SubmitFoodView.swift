@@ -174,7 +174,7 @@ struct SubmitFoodView: View {
                     await viewModel.fetchAllFoods()
                 }
                 print("Success! Code: \(code)")
-                responseText = "Review Submitted!"
+                responseText = "Food Added! Thanks 😁"
             case .failure(let error):
                 print("Recieved error: \(error)")
                 responseText = "An error occured, try again later"
