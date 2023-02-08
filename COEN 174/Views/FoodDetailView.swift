@@ -67,7 +67,10 @@ struct FoodDetailView: View {
                         .environmentObject(viewModel)
                 }
                 
-                
+                Text(food.totalReviews != 1 ? "\(food.totalReviews) Reviews" : "\(food.totalReviews) Review")
+                Text("Reviews")
+                    .font(.title)
+                    .padding(.top)
                 if viewModel.fetchingReviews {
                     HStack {
                         Spacer()
@@ -77,21 +80,31 @@ struct FoodDetailView: View {
                     }
                     .padding(.top)
                 } else if (!viewModel.reviewsForCurrentFood.isEmpty) {
-                    Text(food.totalReviews != 1 ? "\(food.totalReviews) Reviews" : "\(food.totalReviews) Review")
-                    Text("Reviews")
-                        .font(.title)
-                        .padding(.top)
+                    
                     
                     List(viewModel.reviewsForCurrentFood.sortedByDate()) { review in
                         ReviewView(review: review)
                     }
+                    .refreshable {
+                        await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
+                    }
                     .listStyle(.inset)
                     .padding(.leading, -20)
                 } else {
-                    Text("Be the first to write a review!")
-                        .multilineTextAlignment(.center)
-                        .font(.headline)
-                        .padding(.top)
+                    List {
+                        Text("Be the first to write a review!")
+                            .multilineTextAlignment(.center)
+                            .font(.headline)
+                            .padding(.top)
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
+                    }
+                    .refreshable {
+                        await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
+                    }
+                    .listStyle(.inset)
+                    .padding(.leading, -20)
+                    .scrollContentBackground(.hidden)
                 }
                 
                 Spacer()

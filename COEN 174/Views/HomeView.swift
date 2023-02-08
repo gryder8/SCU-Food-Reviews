@@ -49,6 +49,9 @@ struct HomeView: View {
                             .listRowBackground(Color.clear)
                             .listRowSeparator(Visibility.hidden)
                         }
+                        .refreshable {
+                            await viewModel.fetchAllFoods()
+                        }
                         .accessibilityIdentifier("foodList")
                         .scrollContentBackground(.hidden)
                         .transition(.opacity)
