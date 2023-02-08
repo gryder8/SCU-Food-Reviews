@@ -11,7 +11,19 @@ struct AllFoodResult: Codable {
     let foods: [Food]
 }
 
-struct Food: Codable, Identifiable, Hashable {
+struct Food: Codable, Identifiable, Hashable, CustomStringConvertible {
+    
+    ///For gettign a more readable desc for debugging in console
+    var description: String {
+        var desc = "\n🍔 \(name): \(rating)/5; \(totalReviews) reviews"
+        if let tags {
+            desc.append("\ntags: \(tags)")
+        }
+        if let restaurants {
+            desc.append("\nrestaurants: \(restaurants)")
+        }
+        return desc
+    }
     
     var foodId: String
     var id: String {
