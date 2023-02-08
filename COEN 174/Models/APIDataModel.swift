@@ -102,7 +102,7 @@ class APIDataModel: ObservableObject {
         ///Try requesting data from the server
         do {
             let data = try JSONSerialization.data(withJSONObject: jsonDict)
-            
+                        
             URLSession.shared.uploadTask(with: request, from: data) { (responseData, response, error) in
                 //let result: Result<[Review], Error>
                 
