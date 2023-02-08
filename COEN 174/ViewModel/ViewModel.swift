@@ -132,6 +132,38 @@ class ViewModel: ObservableObject {
         })
     }
     
+    func filteredResults(_ filter: FoodFilter) -> [Food] {
+        if (filter == FoodFilter()) { //default filter
+            return dataForDisplay
+        }
+        
+        var result = model.foods
+        
+        if filter.glutenFree { result.removeAll(where: { food in
+            !(food.tags?.contains("Gluten Free") ?? false)
+            })
+        }
+        
+        if filter.vegan { result.removeAll(where: { food in
+            !(food.tags?.contains("Vegan") ?? false)
+            })
+        }
+        
+        if let threshold = filter.minRating {
+            result.removeAll(where: {food in
+                food.rating < threshold
+            })
+        }
+        
+        if let threshold = filter.minNumReviews {
+            result.removeAll(where: {food in
+                food.totalReviews < threshold
+            })
+        }
+        
+        return result
+    }
+    
     private var dataForDisplay: [Food] {
         return model.foods.sorted(by: {f1, f2 in
             f1.rating > f2.rating

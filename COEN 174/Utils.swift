@@ -33,8 +33,11 @@ extension Date {
 }
 
 struct AppBackground: View {
+    
+    var reversed = false
+    
     var body: some View {
-        LinearGradient(colors: [.accentColor.opacity(0.8), .accentColor.opacity(0.25)], startPoint: .top, endPoint: .bottom)
+        LinearGradient(colors: reversed ? [.accentColor.opacity(0.8), .accentColor.opacity(0.25)].reversed() : [.accentColor.opacity(0.8), .accentColor.opacity(0.25)], startPoint: .top, endPoint: .bottom)
             .edgesIgnoringSafeArea(.all)
     }
 }
