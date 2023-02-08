@@ -27,6 +27,22 @@ struct MealHomeViewCell: View {
                     .padding(.bottom, -15)
             }
             .padding(.horizontal, 30)
+            if let restaurants = food.restaurants {
+                Text(commaSeparatedListFromStringArray(restaurants))
+                    .font(.body)
+            }
+            if let tags = food.tags {
+                HStack(alignment: .center, spacing: 0) {
+                    if tags.contains("Vegan") {
+                        VeganSymbolView(size: 20)
+                    }
+                    
+                    if tags.contains("Gluten Free") {
+                        GFSymbolView(size: 20)
+                    }
+                    
+                }
+            }
             
         }
         .padding(.vertical, 15)

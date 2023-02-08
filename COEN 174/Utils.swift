@@ -16,6 +16,12 @@ extension View {
 }
 #endif
 
+func commaSeparatedListFromStringArray(_ list: [String]) -> String {
+    var outputString: String = ""
+    outputString.append(list.map{ "\($0)" }.joined(separator: ","))
+    return outputString
+}
+
 extension Date {
     var descriptionString: String {
         let dateFormatter = DateFormatter()
@@ -30,6 +36,31 @@ struct AppBackground: View {
     var body: some View {
         LinearGradient(colors: [.accentColor.opacity(0.8), .accentColor.opacity(0.25)], startPoint: .top, endPoint: .bottom)
             .edgesIgnoringSafeArea(.all)
+    }
+}
+
+struct GFSymbolView: View {
+    
+    var size:CGFloat = 30
+    
+    var body: some View {
+        HStack(spacing: -5) {
+            Image(systemName: "laurel.leading")
+            Image(systemName: "laurel.trailing")
+        }
+        .font(.system(size: size))
+        .foregroundColor(Color("Wheat"))
+    }
+}
+
+struct VeganSymbolView: View {
+    
+    var size:CGFloat = 30
+    
+    var body: some View {
+        Image(systemName: "leaf")
+            .font(.system(size: size))
+            .foregroundColor(Color("Fern"))
     }
 }
 

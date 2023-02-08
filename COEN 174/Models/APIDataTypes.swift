@@ -23,6 +23,8 @@ struct Food: Codable, Identifiable, Hashable {
     private let current: String
     private let trending: String
     private let featured: String
+    let tags: [String]?
+    let restaurants: [String]?
     
     var isCurrentFood: Bool {
         return current != "F"
@@ -40,9 +42,10 @@ struct Food: Codable, Identifiable, Hashable {
     var reviews: [Review] = []
     
     enum CodingKeys: String, CodingKey {
-            case totalReviews, current, rating, name, featured
-            case foodId
-            case trending
+        case totalReviews, current, rating, name, featured
+        case tags, restaurants
+        case foodId
+        case trending
     }
 }
 
@@ -56,6 +59,7 @@ struct Review: Identifiable, Hashable, Codable {
     let body: String?
     let title: String?
     let dateCreated: String
+    
     
     var date: Date? {
         return dateFromAPIDateString(dateCreated)

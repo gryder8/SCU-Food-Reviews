@@ -133,7 +133,7 @@ class ViewModel: ObservableObject {
     }
     
     private var dataForDisplay: [Food] {
-        return removingNonRatedMeals.sorted(by: {f1, f2 in
+        return model.foods.sorted(by: {f1, f2 in
             f1.rating > f2.rating
         })
     }
@@ -142,7 +142,7 @@ class ViewModel: ObservableObject {
         DispatchQueue.main.async {
             
             withAnimation(.easeIn(duration: 1)) {
-                self.displayData = self.model.foods//self.dataForDisplay
+                self.displayData = self.dataForDisplay//self.dataForDisplay
             }
             print("Found \(self.displayData.count) entries suitable for display")
         }

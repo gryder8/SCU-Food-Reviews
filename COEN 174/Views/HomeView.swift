@@ -67,6 +67,7 @@ struct HomeView: View {
                 }
                 .fullScreenCover(isPresented: $showingAddFoodCover) {
                     SubmitFoodView()
+                        .environmentObject(viewModel)
                 }
             } else {
                 LoadingView()
