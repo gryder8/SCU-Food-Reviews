@@ -150,14 +150,20 @@ class ViewModel: ObservableObject {
         }
         
         if let threshold = filter.minRating {
-            result.removeAll(where: {food in
+            result.removeAll(where: { food in
                 food.rating < threshold
             })
         }
         
         if let threshold = filter.minNumReviews {
-            result.removeAll(where: {food in
+            result.removeAll(where: { food in
                 food.totalReviews < threshold
+            })
+        }
+        
+        if let search = filter.searchQuery {
+            result.removeAll(where: { food in
+                !food.name.localizedCaseInsensitiveContains(search) && !(food.restaurants?.containsSubstring(search) ?? false)
             })
         }
         

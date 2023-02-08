@@ -142,3 +142,13 @@ extension Array where Element == Review {
         return copy
     }
 }
+
+extension Array where Element == String {
+    ///O(n)
+    func containsSubstring(_ s: String) -> Bool {
+        for item in self {
+            if item.localizedCaseInsensitiveContains(s) { return true }
+        }
+        return false
+    }
+}
