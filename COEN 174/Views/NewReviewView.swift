@@ -111,6 +111,9 @@ struct NewReviewView: View {
                 Task.init(priority: .userInitiated) {
                     await viewModel.queryReviewsForFoodFromServer(with:food.foodId, refreshing: true)
                 }
+                Task.init(priority: .userInitiated) {
+                    await viewModel.updateInfoForFood(foodId: food.foodId)
+                }
                 print("Success! Code: \(code)")
                 responseText = "Review Submitted!"
             }

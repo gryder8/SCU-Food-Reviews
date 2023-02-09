@@ -27,21 +27,83 @@ class APIDataModel: ObservableObject {
     
     ///foodId: [Review]
     @Published var foodReviews: [String : [Review]] = [:]
-    
-    //TODO: This belongs in ViewModel
+    @Published var userReviews: [Review] = []
 
     
-    //MARK: - API Base URL
-    
-//    public func useTestData() {
-//        let food1 = Food(name: "Breakfast Burrito", rating: 4.5, totalReviews: 5)
-//        let food2 = Food(name: "Ramen", rating: 1, totalReviews: 8)
-//        let food3 = Food(name: "Acai Bowl", rating: 5, totalReviews: 3)
-//        let food4 = Food(name: "DNS", rating: 0.0, totalReviews: 0)
-//        DispatchQueue.main.async {
-//            self.meals = [food1, food2, food3, food4]
-//        }
-//    }
+    func updateFood(foodId: String, completion: @escaping (Result<Food, Error>) -> ()) async {
+        let urlEndpointString = baseURLString+"getFood"
+        let url: URL = URL(string: urlEndpointString)!
+        
+        print("Using URL: \(url) with foodID: \(foodId)")
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        request.allHTTPHeaderFields = [
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        ]
+        
+        let jsonDict:[String:Any] = [
+            "foodId": foodId
+        ]
+        
+        do {
+            let data = try JSONSerialization.data(withJSONObject: jsonDict)
+                        
+            URLSession.shared.uploadTask(with: request, from: data) { (responseData, response, error) in
+                //let result: Result<[Review], Error>
+                
+                if let error = error {
+                    print("Error with POST request: \(error)")
+                    completion(.failure(error))
+                    return
+                }
+                
+                if let responseCode = (response as? HTTPURLResponse)?.statusCode {
+                    guard responseCode == 200 else {
+                        print("Invalid response code for updating food: \(responseCode) with id: \(foodId)")
+                        print("Using url: \(url)")
+                        if responseCode >= 500 {
+                            completion(.failure(URLError(.badServerResponse)))
+                        } else {
+                            completion(.failure(URLError(.badURL)))
+                        }
+                        return
+                    }
+                }
+                
+                guard let responseData = responseData else { return }
+                
+                if let responseJSONData = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) {
+                    print("Response JSON data = \n\(responseJSONData)")
+                }
+                
+                ///Try decoding data
+                do {
+                    let latestFood: Food = try JSONDecoder().decode(Food.self, from: responseData)
+                    print(latestFood)
+                    DispatchQueue.main.async { [weak self] in
+                        //remove and replace
+                        self?.foods.removeAll(where: { food in
+                            food.foodId == latestFood.foodId
+                        })
+                        self?.foods.append(latestFood)
+                        completion(.success(latestFood))
+                        print("Newest food info: \(latestFood)")
+                    }
+                } catch {
+                    print(error)
+                    completion(.failure(error))
+                }
+            }.resume()
+            
+        } catch {
+            print(error)
+            completion(.failure(error))
+        }
+        
+        
+    }
     
     func getAllFoods(completion: @escaping (Result<[Food], Error>) -> ()) async {
         let urlEndpointString = baseURLString+"getAllFood"
@@ -141,6 +203,70 @@ class APIDataModel: ObservableObject {
                         completion(.success(allReviewsForFood.reviews))
                         print("Found \(allReviewsForFood.reviews.count) reviews for foodId: \(foodID)")
                     }
+                } catch {
+                    print(error)
+                    completion(.failure(error))
+                }
+            }.resume()
+            
+        } catch {
+            print(error)
+            completion(.failure(error))
+        }
+    }
+    
+    func getUserReviews(for userId: String, completion: @escaping (Result<[Review], Error>) -> ()) async {
+        let urlEndpointString = baseURLString+"getReviewsByUser"
+        let endpointURL: URL = URL(string: urlEndpointString)!
+        print("Using URL: \(endpointURL) with userId: \(userId) to get reviews for current user")
+        var request = URLRequest(url: endpointURL)
+        request.httpMethod = "POST"
+        request.allHTTPHeaderFields = [
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        ]
+        
+        let jsonDict:[String:Any] = [
+            "userId": userId
+        ]
+        
+        do {
+            let data = try JSONSerialization.data(withJSONObject: jsonDict)
+                        
+            URLSession.shared.uploadTask(with: request, from: data) { (responseData, response, error) in
+                
+                if let error = error {
+                    print("Error with POST request: \(error)")
+                    completion(.failure(error))
+                    return
+                }
+                
+                if let responseCode = (response as? HTTPURLResponse)?.statusCode {
+                    guard responseCode == 200 else {
+                        print("Invalid response code for get reviews for user: \(responseCode) with id: \(userId)")
+                        if responseCode >= 500 {
+                            completion(.failure(URLError(.badServerResponse)))
+                        } else {
+                            completion(.failure(URLError(.badURL)))
+                        }
+                        return
+                    }
+                }
+                
+                guard let responseData = responseData else { return }
+                
+                if let responseJSONData = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) {
+                    print("Response JSON data = \n\(responseJSONData)")
+                }
+                
+                ///Try decoding data
+                do {
+                    let allReviewsForUser: ReviewsResponse = try JSONDecoder().decode(ReviewsResponse.self, from: responseData)
+                    print("All Reviews:\n\(allReviewsForUser)")
+                    DispatchQueue.main.async { [weak self] in
+                        self?.userReviews = allReviewsForUser.reviews
+                    }
+                    completion(.success(allReviewsForUser.reviews))
                 } catch {
                     print(error)
                     completion(.failure(error))

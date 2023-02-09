@@ -7,37 +7,8 @@
 
 import SwiftUI
 
-private struct ReviewView: View {
-    
-    let review: Review
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            if let title = review.title {
-                Text(title)
-                    .font(.title3)
-                    .padding(.vertical, -5)
-            }
-            RatingView(rating: Double(review.rating), showRatingNum: false)
-                .padding(.leading, -15)
-                .listRowSeparator(.hidden)
-            if let body = review.body {
-                Text(body)
-                    .font(.system(size: 16, design: .rounded))
-            }
-            if let relativeDesc = review.relativeDescription {
-                Text(relativeDesc)
-                    .font(.caption)
-                    .foregroundColor(.gray)
-                    .padding(.top, 5)
-            }
-        }
-    }
-}
 
-struct NewReview: Equatable, Hashable {
-    
-}
+struct NewReview: Equatable, Hashable {}
 
 struct FoodDetailView: View {
     
@@ -91,6 +62,7 @@ struct FoodDetailView: View {
                     
                     List(viewModel.reviewsForCurrentFood.sortedByDate()) { review in
                         ReviewView(review: review)
+                            .environmentObject(viewModel)
                     }
                     .refreshable {
                         await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)

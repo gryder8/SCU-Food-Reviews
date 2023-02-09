@@ -18,10 +18,17 @@ class ViewModel: ObservableObject {
     @Published var displayData: [Food] = []
     @Published var fetchingData: Bool = false
     @Published var fetchingReviews: Bool = false
-    
+    @Published var fetchingUserReviews: Bool = false
+    @Published var userReviews: [Review] = []
     @Published var reviewsForCurrentFood: [Review] = []
     
     @Published var errorMessage: String? = nil
+    
+    func foodFromID(foodId: String) -> Food? {
+        return model.foods.first(where: { food in
+            food.foodId == foodId
+        })
+    }
     
     func queryReviewsForFoodFromServer(with foodId: String, refreshing: Bool = false) async {
         DispatchQueue.main.async { [weak self] in
@@ -52,6 +59,44 @@ class ViewModel: ObservableObject {
                     self?.errorMessage = "An error occurred, please try again later and check your connection."
                 }
                 
+            }
+        })
+    }
+    
+    func loadUserReviewsFromServer(userId: String) async {
+        DispatchQueue.main.async {
+            self.fetchingUserReviews = true
+        }
+        await model.getUserReviews(for: userId, completion: { result in
+            switch (result) {
+                case .success(let reviews):
+                print("Found \(reviews.count) reviews for the current user")
+                DispatchQueue.main.async { [weak self] in
+                    self?.userReviews = reviews
+                    self?.fetchingUserReviews = false
+                }
+            case .failure(let error):
+                print("Getting user reviews failed with error: \(error)")
+                DispatchQueue.main.async { [weak self] in
+                    self?.errorMessage = "An error occurred getting your reviews. Try again later."
+                    self?.fetchingUserReviews = false
+                }
+
+            }
+            
+        })
+    }
+        
+    func updateInfoForFood(foodId: String) async {
+        await model.updateFood(foodId: foodId, completion: { [weak self] result in
+            switch (result) {
+            case .success(let food):
+                print("Succesfully updated food: \(food)")
+            case .failure(let error):
+                DispatchQueue.main.async { [weak self] in
+                    self?.errorMessage = "An error occurred updating food info."
+                }
+                print("Error updating food: \(error)")
             }
         })
     }
