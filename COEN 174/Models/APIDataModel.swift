@@ -32,7 +32,6 @@ class APIDataModel: ObservableObject {
 
     
     //MARK: - API Base URL
-    private let baseURLString = "https://e4d4rr5w80.execute-api.us-west-2.amazonaws.com/Stage/" //append endpoints onto this as needed
     
 //    public func useTestData() {
 //        let food1 = Food(name: "Breakfast Burrito", rating: 4.5, totalReviews: 5)

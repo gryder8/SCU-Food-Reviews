@@ -13,6 +13,7 @@ struct HomeView: View {
     
     @StateObject private var viewModel: ViewModel = ViewModel()
     @EnvironmentObject private var navModel: NavigationModel
+    @EnvironmentObject private var authModel: UserAuthModel
     
     @State private var showingAddFoodCover = false
     @State private var showingFilterEditor = false
@@ -89,6 +90,7 @@ struct HomeView: View {
                             FoodDetailView(food: food)
                                 .environmentObject(navModel)
                                 .environmentObject(viewModel)
+                                .environmentObject(authModel)
                         }
                         .listStyle(.inset)
                         .padding()
