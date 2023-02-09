@@ -261,6 +261,8 @@ class APIDataModel: ObservableObject {
                 
                 ///Try decoding data
                 do {
+                    //TODO: API Response does not currently contain a `foodId` key for each review, fixing this should bring the responses inline and parse should work
+                    //Otherwise, API call works
                     let allReviewsForUser: ReviewsResponse = try JSONDecoder().decode(ReviewsResponse.self, from: responseData)
                     print("All Reviews:\n\(allReviewsForUser)")
                     DispatchQueue.main.async { [weak self] in
