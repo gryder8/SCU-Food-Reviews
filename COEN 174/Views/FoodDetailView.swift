@@ -81,6 +81,11 @@ struct FoodDetailView: View {
                         Spacer()
                     }
                     .padding(.top)
+                } else if let errorMsg = viewModel.errorMessage {
+                    Text(errorMsg)
+                        .font(.system(size: 16).bold())
+                        .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
                 } else if (!viewModel.reviewsForCurrentFood.isEmpty) {
                     
                     

@@ -53,7 +53,8 @@ class APIDataModel: ObservableObject {
             
             if let httpResponse = response as? HTTPURLResponse {
                 guard httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299 else {
-                    print("***Error: Status \(httpResponse.statusCode)")
+                    print("***Error: Status \(httpResponse.statusCode) from \(url)")
+                    
                     isFetchingAllFoods = false
                     completion(.failure(URLError(.badServerResponse)))
                     return
@@ -64,6 +65,7 @@ class APIDataModel: ObservableObject {
             print(allFood)
             DispatchQueue.main.async {
                 self.foods = allFood.foods
+
                 completion(.success(allFood.foods))
                 print("Foods now has \(self.foods.count) entries")
             }
@@ -74,6 +76,7 @@ class APIDataModel: ObservableObject {
                 print("API call failed!\n\(error)")
                 completion(.failure(err))
             } else {
+                
                 print("Decoding failed!\n\(error)")
                 completion(.failure(error))
             }

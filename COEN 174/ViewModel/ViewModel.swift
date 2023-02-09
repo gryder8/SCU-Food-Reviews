@@ -21,11 +21,13 @@ class ViewModel: ObservableObject {
     
     @Published var reviewsForCurrentFood: [Review] = []
     
+    @Published var errorMessage: String? = nil
+    
     func queryReviewsForFoodFromServer(with foodId: String, refreshing: Bool = false) async {
         DispatchQueue.main.async { [weak self] in
             self?.fetchingReviews = true
         }
-        if let reviews = model.foodReviews[foodId], !refreshing { //utilize cache held by APIModel
+        if let reviews = model.foodReviews[foodId], !refreshing { //utilize run-time cache held by APIModel
             DispatchQueue.main.async {
                 self.reviewsForCurrentFood = reviews
             }
@@ -39,12 +41,16 @@ class ViewModel: ObservableObject {
                 DispatchQueue.main.async { [weak self] in
                     self?.reviewsForCurrentFood = reviews
                     print("Assigned \(reviews.count) reviews for current food!")
+                    self?.errorMessage = nil
                     withAnimation(.easeIn) {
                         self?.fetchingReviews = false
                     }
                 }
             case .failure(let error):
                 print("Failed with error: \(error)")
+                DispatchQueue.main.async { [weak self] in
+                    self?.errorMessage = "An error occurred, please try again later and check your connection."
+                }
                 
             }
         })
@@ -62,9 +68,15 @@ class ViewModel: ObservableObject {
             switch result {
             case .success(let food):
                 print("Successful API call! Found \(food.count) foods.")
+                DispatchQueue.main.async { [weak self] in
+                    self?.errorMessage = nil
+                }
                 self?.configDisplayData()
             case .failure(let error):
                 print("Failed with error: \(error)")
+                DispatchQueue.main.async { [weak self] in
+                    self?.errorMessage = "An error occurred, please try again later and check your connection."
+                }
             }
         })
     }
