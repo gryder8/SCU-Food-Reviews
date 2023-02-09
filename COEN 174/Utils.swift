@@ -37,7 +37,7 @@ struct AppBackground: View {
     var reversed = false
     
     var body: some View {
-        LinearGradient(colors: reversed ? [.accentColor.opacity(0.8), .accentColor.opacity(0.25)].reversed() : [.accentColor.opacity(0.8), .accentColor.opacity(0.25)], startPoint: .top, endPoint: .bottom)
+        LinearGradient(colors: reversed ? [.accentColor.opacity(0.8), .accentColor.opacity(0.65)].reversed() : [.accentColor.opacity(0.8), .accentColor.opacity(0.65)], startPoint: .top, endPoint: .bottom)
             .edgesIgnoringSafeArea(.all)
     }
 }
@@ -150,5 +150,11 @@ extension Array where Element == String {
             if item.localizedCaseInsensitiveContains(s) { return true }
         }
         return false
+    }
+}
+
+extension Color {
+    static var lightGray: Color {
+        return Color("LightGray")
     }
 }

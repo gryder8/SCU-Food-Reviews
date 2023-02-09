@@ -261,8 +261,6 @@ class APIDataModel: ObservableObject {
                 
                 ///Try decoding data
                 do {
-                    //TODO: API Response does not currently contain a `foodId` key for each review, fixing this should bring the responses inline and parse should work
-                    //Otherwise, API call works
                     let allReviewsForUser: ReviewsResponse = try JSONDecoder().decode(ReviewsResponse.self, from: responseData)
                     print("All Reviews:\n\(allReviewsForUser)")
                     DispatchQueue.main.async { [weak self] in
@@ -272,6 +270,58 @@ class APIDataModel: ObservableObject {
                 } catch {
                     print(error)
                     completion(.failure(error))
+                }
+            }.resume()
+            
+        } catch {
+            print(error)
+            completion(.failure(error))
+        }
+    }
+    
+    /*
+     Endpoint: removeReview
+     Type: POST
+     Request: { ‘reviewId’: String }
+     */
+    func removeReview(reviewId: String, completion: @escaping (Result<Int, Error>) -> ()) async {
+        let urlEndpointString = baseURLString+"removeReview"
+        let endpointURL: URL = URL(string: urlEndpointString)!
+        print("Using URL: \(endpointURL) to remove review with id: \(reviewId)")
+        var request = URLRequest(url: endpointURL)
+        request.httpMethod = "POST"
+        request.allHTTPHeaderFields = [
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        ]
+        
+        let jsonDict:[String:Any] = [
+            "reviewId": reviewId
+        ]
+        
+        do {
+            let data = try JSONSerialization.data(withJSONObject: jsonDict)
+                        
+            URLSession.shared.uploadTask(with: request, from: data) { (responseData, response, error) in
+                
+                if let error = error {
+                    print("Error with POST request: \(error)")
+                    completion(.failure(error))
+                    return
+                }
+                
+                if let responseCode = (response as? HTTPURLResponse)?.statusCode {
+                    guard responseCode == 200 else {
+                        print("Invalid response code to remove review with id: \(reviewId)")
+                        if responseCode >= 500 {
+                            completion(.failure(URLError(.badServerResponse)))
+                        } else {
+                            completion(.failure(URLError(.badURL)))
+                        }
+                        return
+                    }
+                    
+                    completion(.success(responseCode))
                 }
             }.resume()
             

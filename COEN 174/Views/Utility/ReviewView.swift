@@ -35,8 +35,14 @@ struct ReviewView: View {
             if let relativeDesc = review.relativeDescription {
                 Text(relativeDesc)
                     .font(.caption)
-                    .foregroundColor(.gray)
-                    .padding(.top, 5)
+                    .foregroundColor(.lightGray)
+                    .padding(.top, 1)
+            }
+            
+            if let updatedDesc = review.relativeUpdatedDescription {
+                Text("Edited: \(updatedDesc)")
+                    .font(.caption)
+                    .foregroundColor(.lightGray)
             }
         }
     }
@@ -44,6 +50,9 @@ struct ReviewView: View {
 
 struct ReviewView_Previews: PreviewProvider {
     static var previews: some View {
-        ReviewView(review: Review(reviewId: UUID().uuidString, foodId: UUID().uuidString, rating: 4, body: "Lorem ipsum dolor sit amet", title: "Test Review", dateCreated: Date().descriptionString))
+        ZStack {
+            AppBackground()
+            ReviewView(review: Review(reviewId: UUID().uuidString, foodId: UUID().uuidString, rating: 4, body: "Lorem ipsum dolor sit amet", title: "Test Review", dateCreated: "02/09/2023, 06:26:54", dateUpdated: "02/09/2023, 20:40:10"))
+        }
     }
 }

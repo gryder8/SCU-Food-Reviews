@@ -18,80 +18,88 @@ struct FoodDetailView: View {
     @EnvironmentObject private var authModel: UserAuthModel
     
     var body: some View {
-        HStack {
-            VStack (alignment: .leading, spacing: 5) {
-                //Text(food.name)
-                //.font(.largeTitle)
-                HStack {
-                    RatingView(rating: food.rating)
-                    Spacer()
-                    Button {
-                        navModel.navPath.append(NewReview())
-                    } label: {
-                        Image(systemName: "square.and.pencil")
-                            .font(.system(size: 24))
-                    }
-                    .padding(.trailing, 10)
-                }
-                .navigationDestination(for: NewReview.self) { _ in
-                    NewReviewView(food: self.food)
-                        .environmentObject(navModel)
-                        .environmentObject(viewModel)
-                        .environmentObject(authModel)
-                }
-                
-                Text(food.totalReviews != 1 ? "\(food.totalReviews) Reviews" : "\(food.totalReviews) Review")
-                Text("Reviews")
-                    .font(.title)
-                    .padding(.top)
-                if viewModel.fetchingReviews {
+        ZStack {
+            AppBackground()
+                .edgesIgnoringSafeArea(.all)
+            HStack {
+                VStack (alignment: .leading, spacing: 5) {
+                    //Text(food.name)
+                    //.font(.largeTitle)
                     HStack {
+                        RatingView(rating: food.rating)
                         Spacer()
-                        LoadingView()
-                            .transition(.opacity)
-                        Spacer()
+                        Button {
+                            navModel.navPath.append(NewReview())
+                        } label: {
+                            Image(systemName: "square.and.pencil")
+                                .font(.system(size: 24))
+                        }
+                        .padding(.trailing, 10)
                     }
-                    .padding(.top)
-                } else if let errorMsg = viewModel.errorMessage {
-                    Text(errorMsg)
-                        .font(.system(size: 16).bold())
-                        .foregroundColor(.red)
-                        .multilineTextAlignment(.center)
-                } else if (!viewModel.reviewsForCurrentFood.isEmpty) {
-                    
-                    
-                    List(viewModel.reviewsForCurrentFood.sortedByDate()) { review in
-                        ReviewView(review: review)
+                    .navigationDestination(for: NewReview.self) { _ in
+                        NewReviewView(food: self.food)
+                            .environmentObject(navModel)
                             .environmentObject(viewModel)
+                            .environmentObject(authModel)
                     }
-                    .refreshable {
-                        await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
-                    }
-                    .listStyle(.inset)
-                    .padding(.leading, -20)
-                } else {
-                    List {
-                        Text("Be the first to write a review!")
+                    
+                    Text(food.totalReviews != 1 ? "\(food.totalReviews) Reviews" : "\(food.totalReviews) Review")
+                    Text("Reviews")
+                        .font(.title)
+                        .padding(.top)
+                    if viewModel.fetchingReviews {
+                        HStack {
+                            Spacer()
+                            LoadingView()
+                                .transition(.opacity)
+                            Spacer()
+                        }
+                        .padding(.top)
+                    } else if let errorMsg = viewModel.errorMessage {
+                        Text(errorMsg)
+                            .font(.system(size: 16).bold())
+                            .foregroundColor(.red)
                             .multilineTextAlignment(.center)
-                            .font(.headline)
-                            .padding(.top)
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(.hidden)
+                    } else if (!viewModel.reviewsForCurrentFood.isEmpty) {
+                        
+                        
+                        List(viewModel.currentFoodReviewsSortedByMostRecent) { review in
+                            ReviewView(review: review)
+                                .environmentObject(viewModel)
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
+                        }
+                        .refreshable {
+                            await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
+                        }
+                        .listStyle(.inset)
+                        .padding(.leading, -20)
+                        .scrollContentBackground(.hidden)
+                    } else {
+                        List {
+                            Text("Be the first to write a review!")
+                                .multilineTextAlignment(.center)
+                                .font(.headline)
+                                .padding(.top)
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
+                        }
+                        .refreshable {
+                            await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
+                        }
+                        .listStyle(.inset)
+                        .padding(.leading, -20)
+                        .scrollContentBackground(.hidden)
                     }
-                    .refreshable {
-                        await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
-                    }
-                    .listStyle(.inset)
-                    .padding(.leading, -20)
-                    .scrollContentBackground(.hidden)
+                    
+                    Spacer()
                 }
-                
-                Spacer()
+                .padding(.leading, 15)
+                .navigationTitle(food.name)
             }
-            .padding(.leading, 15)
-            .navigationTitle(food.name)
+            
+            Spacer()
         }
-        Spacer()
     }
 }
 

@@ -21,6 +21,7 @@ class ViewModel: ObservableObject {
     @Published var fetchingUserReviews: Bool = false
     @Published var userReviews: [Review] = []
     @Published var reviewsForCurrentFood: [Review] = []
+    @Published var removingReview: Bool = false
     
     @Published var errorMessage: String? = nil
     
@@ -29,6 +30,18 @@ class ViewModel: ObservableObject {
     func foodFromID(foodId: String) -> Food? {
         return model.foods.first(where: { food in
             food.foodId == foodId
+        })
+    }
+    
+    var userReviewsSortedByMostRecent: [Review] {
+        return userReviews.sorted(by: {r1, r2 in
+            r1.updatedDate ?? r1.date ?? Date() > r2.updatedDate ?? r2.date ?? Date()
+        })
+    }
+    
+    var currentFoodReviewsSortedByMostRecent: [Review] {
+        return reviewsForCurrentFood.sorted(by: {r1, r2 in
+            r1.updatedDate ?? r1.date ?? Date() > r2.updatedDate ?? r2.date ?? Date()
         })
     }
     
@@ -93,7 +106,7 @@ class ViewModel: ObservableObject {
     }
         
     func updateInfoForFood(foodId: String) async {
-        await model.updateFood(foodId: foodId, completion: { [weak self] result in
+        await model.updateFood(foodId: foodId) { [weak self] result in
             switch (result) {
             case .success(let food):
                 print("Succesfully updated food: \(food)")
@@ -107,7 +120,33 @@ class ViewModel: ObservableObject {
                 }
                 print("Error updating food: \(error)")
             }
-        })
+        }
+    }
+    
+    //TODO: Call
+    func removeReview(reviewId: String) async {
+        DispatchQueue.main.async {
+            self.removingReview = true
+        }
+        await model.removeReview(reviewId: reviewId) { [weak self] result in
+            switch (result) {
+            case .success(let code):
+                print("Success with code: \(code)")
+                DispatchQueue.main.async { [weak self] in
+                    self?.removingReview = false
+                }
+            case .failure(let error):
+                print("Error removing review: \(error)")
+                DispatchQueue.main.async { [weak self] in
+                    self?.errorMessage = "Failed to remove review, try again later."
+                    self?.removingReview = false
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + ViewModel.errorMessagePersistanceDuration) { [weak self] in
+                    self?.errorMessage = nil
+                }
+            }
+        }
     }
     
     func loadReviewsForFood(with foodId: String) {

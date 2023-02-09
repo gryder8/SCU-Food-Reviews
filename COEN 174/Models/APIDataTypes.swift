@@ -25,6 +25,7 @@ struct Food: Codable, Identifiable, Hashable, CustomStringConvertible {
         return desc
     }
     
+    
     var foodId: String
     var id: String {
         return foodId
@@ -71,14 +72,24 @@ struct Review: Identifiable, Hashable, Codable {
     let body: String?
     let title: String?
     let dateCreated: String
+    let dateUpdated: String?
     
     
     var date: Date? {
         return dateFromAPIDateString(dateCreated)
     }
     
+    var updatedDate: Date? {
+        guard let dateUpdated else { return nil }
+        return dateFromAPIDateString(dateUpdated)
+    }
+    
     var relativeDescription: String? {
         return date?.formattedForUIDisplay()
+    }
+    
+    var relativeUpdatedDescription: String? {
+        return updatedDate?.formattedForUIDisplay()
     }
 }
 

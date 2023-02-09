@@ -17,7 +17,7 @@ struct RatingView: View {
             if (showRatingNum) {
                 Text(String(format: "(%.2f)", rating))
                     .font(.system(size: 18).italic())
-                    .foregroundColor(.gray)
+                    .foregroundColor(Color.lightGray)
             }
             FiveStarView(rating: rating)
                 .frame(minWidth: 100, idealWidth: 150, maxWidth: 150, minHeight: 30, idealHeight: 40, maxHeight: 40, alignment: .leading)
@@ -28,6 +28,10 @@ struct RatingView: View {
 
 struct RatingView_Previews: PreviewProvider {
     static var previews: some View {
-        RatingView(rating: 3.25)
+        
+        ZStack {
+            AppBackground()
+            RatingView(rating: 3.25)
+        }
     }
 }
