@@ -45,7 +45,7 @@ struct ProfileView: View {
                 primaryButton: .destructive(Text("Sign Out")) {
                     print("User selected sign out")
                     authModel.signOut()
-                    withAnimation {
+                    withAnimation(.linear) {
                         navModel.popToRoot()
                     }
                 },

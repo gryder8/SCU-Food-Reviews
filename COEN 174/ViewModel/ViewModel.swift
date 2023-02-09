@@ -24,6 +24,8 @@ class ViewModel: ObservableObject {
     
     @Published var errorMessage: String? = nil
     
+    static private let errorMessagePersistanceDuration = 3.0
+    
     func foodFromID(foodId: String) -> Food? {
         return model.foods.first(where: { food in
             food.foodId == foodId
@@ -81,6 +83,9 @@ class ViewModel: ObservableObject {
                     self?.errorMessage = "An error occurred getting your reviews. Try again later."
                     self?.fetchingUserReviews = false
                 }
+                DispatchQueue.main.asyncAfter(deadline: .now() + ViewModel.errorMessagePersistanceDuration) { [weak self] in
+                    self?.errorMessage = nil
+                }
 
             }
             
@@ -95,6 +100,10 @@ class ViewModel: ObservableObject {
             case .failure(let error):
                 DispatchQueue.main.async { [weak self] in
                     self?.errorMessage = "An error occurred updating food info."
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + ViewModel.errorMessagePersistanceDuration) { [weak self] in
+                    self?.errorMessage = nil
                 }
                 print("Error updating food: \(error)")
             }
