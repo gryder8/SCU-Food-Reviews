@@ -23,6 +23,7 @@ struct NewReviewView: View {
     
     @EnvironmentObject private var navModel: NavigationModel
     @EnvironmentObject private var viewModel: ViewModel
+    @EnvironmentObject private var authModel: UserAuthModel
     
     var body: some View {
         Form {
@@ -100,7 +101,7 @@ struct NewReviewView: View {
             return
         }
         
-        creator.submitReview(rating: self.currentRating!, text: self.bodyText, title: self.title, reviewId: UUID().uuidString, foodId: food.foodId, completion: { result in
+        creator.submitReview(rating: self.currentRating!, text: self.bodyText, title: self.title, reviewId: UUID().uuidString, foodId: food.foodId, userId: authModel.userId, completion: { result in
             
             switch result {
             case .failure(let error):

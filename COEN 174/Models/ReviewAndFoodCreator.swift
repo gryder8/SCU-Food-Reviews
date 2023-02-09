@@ -9,12 +9,11 @@ import Foundation
 
 class ReviewAndFoodCreator: ObservableObject {
     
-    private let baseURLString = "https://e4d4rr5w80.execute-api.us-west-2.amazonaws.com/Stage/" //append endpoints onto this as needed
-    
+        
     @Published var submittingReview: Bool = false
     @Published var submittingFood: Bool = false
     
-    func submitReview(rating: Int, text: String, title: String, reviewId: String, foodId: String, completion: @escaping (Result<Int, Error>) -> ()) {
+    func submitReview(rating: Int, text: String, title: String, reviewId: String, foodId: String, userId: String, completion: @escaping (Result<Int, Error>) -> ()) {
         print("Submitting Review!")
         
         DispatchQueue.main.async {
@@ -31,13 +30,14 @@ class ReviewAndFoodCreator: ObservableObject {
             "Accept": "application/json"
         ]
         
-        let jsonDict = generateJSONDictForReviewTransmission(rating: rating, text: text, title: title, reviewId: reviewId, foodId: foodId)
+        let jsonDict = generateJSONDictForReviewTransmission(rating: rating, text: text, title: title, reviewId: reviewId, foodId: foodId, userId: userId)
         
         
         
         do {
             let data = try JSONSerialization.data(withJSONObject: jsonDict)
             
+            print("Beginning transmission of review by user with id: \(userId)")
             URLSession.shared.uploadTask(with: request, from: data) { (responseData, response, error) in
                 let result: Result<Int, Error>
                 
@@ -106,6 +106,7 @@ class ReviewAndFoodCreator: ObservableObject {
                 print("Payload JSON data = \(payloadJSONData)")
             }
             
+            
             URLSession.shared.uploadTask(with: request, from: data) { (responseData, response, error) in
                 let result: Result<Int, Error>
                 
@@ -151,11 +152,11 @@ class ReviewAndFoodCreator: ObservableObject {
     /*
      Request: { ‘reviewId’: <optional>String, ‘userId’: String, ‘foodId’: String, ‘rating’: Num, ‘title’: <optional>String, ‘body’: <optional>String }
      */
-    private func generateJSONDictForReviewTransmission(rating: Int, text: String, title: String, reviewId: String, foodId: String) -> [String: Any] {
-        let userID = "Gavin"
+    private func generateJSONDictForReviewTransmission(rating: Int, text: String, title: String, reviewId: String, foodId: String, userId: String) -> [String: Any] {
+        //let userID = "Gavin"
         let dict: [String: Any] = [
             //"reviewId":reviewId,
-            "userId":userID,
+            "userId":userId,
             "foodId":foodId,
             "rating":rating,
             "title":title,

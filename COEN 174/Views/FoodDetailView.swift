@@ -44,6 +44,7 @@ struct FoodDetailView: View {
     var food: Food
     @EnvironmentObject private var navModel: NavigationModel
     @EnvironmentObject private var viewModel: ViewModel
+    @EnvironmentObject private var authModel: UserAuthModel
     
     var body: some View {
         HStack {
@@ -65,6 +66,7 @@ struct FoodDetailView: View {
                     NewReviewView(food: self.food)
                         .environmentObject(navModel)
                         .environmentObject(viewModel)
+                        .environmentObject(authModel)
                 }
                 
                 Text(food.totalReviews != 1 ? "\(food.totalReviews) Reviews" : "\(food.totalReviews) Review")
@@ -79,6 +81,11 @@ struct FoodDetailView: View {
                         Spacer()
                     }
                     .padding(.top)
+                } else if let errorMsg = viewModel.errorMessage {
+                    Text(errorMsg)
+                        .font(.system(size: 16).bold())
+                        .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
                 } else if (!viewModel.reviewsForCurrentFood.isEmpty) {
                     
                     

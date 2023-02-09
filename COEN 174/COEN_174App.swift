@@ -11,13 +11,21 @@ import SwiftUI
 struct COEN_174App: App {
     @StateObject private var apiModel = APIDataModel.shared
     @StateObject private var navModel = NavigationModel()
+    @StateObject var userAuth: UserAuthModel =  UserAuthModel()
+    
     
     var body: some Scene {
         WindowGroup {
             NavigationStack(path: $navModel.navPath) {
-                HomeView()
-                    .environmentObject(apiModel)
-                    .environmentObject(navModel)
+                if (userAuth.isLoggedIn) {
+                    HomeView()
+                        .environmentObject(apiModel)
+                        .environmentObject(navModel)
+                        .environmentObject(userAuth)
+                } else {
+                    GoogleLoginView()
+                        .environmentObject(userAuth)
+                }
             }
         }
     }

@@ -13,6 +13,7 @@ struct HomeView: View {
     
     @StateObject private var viewModel: ViewModel = ViewModel()
     @EnvironmentObject private var navModel: NavigationModel
+    @EnvironmentObject private var authModel: UserAuthModel
     
     @State private var showingAddFoodCover = false
     @State private var showingFilterEditor = false
@@ -27,7 +28,14 @@ struct HomeView: View {
             if (!viewModel.fetchingData) {
                 VStack {
                     let foods = viewModel.filteredResults(self.foodFilter)
-                    if (foods.isEmpty && searchText.isEmpty) {
+                    if let error = viewModel.errorMessage {
+                        Text(error)
+                            .font(.system(size: 18).bold())
+                            .foregroundColor(.red)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                    }
+                    else if (foods.isEmpty && searchText.isEmpty) {
                         Text("No foods meet your criteria, try changing it.")
                             .multilineTextAlignment(.center)
                             .font(.title3.bold())
@@ -89,6 +97,7 @@ struct HomeView: View {
                             FoodDetailView(food: food)
                                 .environmentObject(navModel)
                                 .environmentObject(viewModel)
+                                .environmentObject(authModel)
                         }
                         .listStyle(.inset)
                         .padding()

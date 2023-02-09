@@ -32,7 +32,6 @@ class APIDataModel: ObservableObject {
 
     
     //MARK: - API Base URL
-    private let baseURLString = "https://e4d4rr5w80.execute-api.us-west-2.amazonaws.com/Stage/" //append endpoints onto this as needed
     
 //    public func useTestData() {
 //        let food1 = Food(name: "Breakfast Burrito", rating: 4.5, totalReviews: 5)
@@ -54,7 +53,8 @@ class APIDataModel: ObservableObject {
             
             if let httpResponse = response as? HTTPURLResponse {
                 guard httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299 else {
-                    print("***Error: Status \(httpResponse.statusCode)")
+                    print("***Error: Status \(httpResponse.statusCode) from \(url)")
+                    
                     isFetchingAllFoods = false
                     completion(.failure(URLError(.badServerResponse)))
                     return
@@ -65,6 +65,7 @@ class APIDataModel: ObservableObject {
             print(allFood)
             DispatchQueue.main.async {
                 self.foods = allFood.foods
+
                 completion(.success(allFood.foods))
                 print("Foods now has \(self.foods.count) entries")
             }
@@ -75,6 +76,7 @@ class APIDataModel: ObservableObject {
                 print("API call failed!\n\(error)")
                 completion(.failure(err))
             } else {
+                
                 print("Decoding failed!\n\(error)")
                 completion(.failure(error))
             }
