@@ -33,6 +33,7 @@ struct HomeView: View {
                             .font(.system(size: 18).bold())
                             .foregroundColor(.red)
                             .multilineTextAlignment(.center)
+                            .padding(.horizontal)
                     }
                     else if (foods.isEmpty && searchText.isEmpty) {
                         Text("No foods meet your criteria, try changing it.")
