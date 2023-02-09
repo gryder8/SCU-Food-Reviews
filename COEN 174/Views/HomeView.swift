@@ -19,36 +19,65 @@ struct HomeView: View {
     
     @State private var foodFilter = FoodFilter()
     
+    @State private var searchText: String = ""
+    
     var body: some View {
         ZStack {
             AppBackground()
             if (!viewModel.fetchingData) {
                 VStack {
                     let foods = viewModel.filteredResults(self.foodFilter)
-                    if (foods.isEmpty) {
+                    if (foods.isEmpty && searchText.isEmpty) {
                         Text("No foods meet your criteria, try changing it.")
                             .multilineTextAlignment(.center)
-                            .font(.title2.bold())
+                            .font(.title3.bold())
+                            .onAppear { //for some reason, the onChange() modifier doesn't detect when the field is emptied so we need to check it here
+                                //this check if inexpensive, but forces the state to be updated
+                                if searchText.isEmpty { foodFilter.searchQuery = nil }
+                            }
                     } else {
-                        List(foods) { food in
-                            HStack {
-                                Spacer()
-                                Button {
-                                    Task {
-                                        await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
+                        if (foods.isEmpty && !searchText.isEmpty) {
+                            Text("Nothing found for \(searchText)")
+                                .font(.subheadline)
+                                .padding()
+                        }
+                        List {
+                            ForEach(foods) { food in
+                                Group {
+                                    HStack {
+                                        Spacer()
+                                        Button {
+                                            Task {
+                                                await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
+                                            }
+                                            navModel.navPath.append(food)
+                                        } label: {
+                                            MealHomeViewCell(food: food)
+                                        }
+                                        .listRowBackground(Color.clear)
+                                        .buttonStyle(.plain)
+                                        
+                                        Spacer()
                                     }
-                                    navModel.navPath.append(food)
-                                } label: {
-                                    MealHomeViewCell(food: food)
                                 }
                                 .listRowBackground(Color.clear)
-                                .buttonStyle(.plain)
-                                
-                                Spacer()
+                                .listRowSeparator(Visibility.hidden)
                             }
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(Visibility.hidden)
+                            //Makes sure the empty list is invisible
+                            if (foods.isEmpty) {
+                                Spacer()
+                                    .listRowBackground(Color.clear)
+                                    .listRowSeparator(.hidden)
+                            }
                         }
+                        .searchable(text: $searchText, prompt: Text("Search by food or restaurant"))
+                        .onChange(of: searchText, perform: { newVal in
+                            if newVal.isEmpty {
+                                foodFilter.searchQuery = nil
+                                return
+                            }
+                            foodFilter.searchQuery = newVal
+                        })
                         .refreshable {
                             await viewModel.fetchAllFoods()
                         }

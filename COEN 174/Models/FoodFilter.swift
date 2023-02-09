@@ -13,4 +13,5 @@ struct FoodFilter: Equatable {
     var glutenFree: Bool = false
     var minRating: Double?
     var minNumReviews: Int?
+    var searchQuery: String?
 }
