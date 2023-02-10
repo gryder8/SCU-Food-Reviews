@@ -90,6 +90,7 @@ class APIDataModel: ObservableObject {
                         })
 
                         self?.foods.append(updatedFood)
+                        self?.objectWillChange.send()
                         completion(.success(updatedFood))
                         print("Newest food info: \(updatedFood)")
                     }

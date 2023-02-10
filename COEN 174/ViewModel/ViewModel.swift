@@ -110,6 +110,7 @@ class ViewModel: ObservableObject {
             switch (result) {
             case .success(let food):
                 print("Succesfully updated food: \(food)")
+                self?.objectWillChange.send()
             case .failure(let error):
                 DispatchQueue.main.async { [weak self] in
                     self?.errorMessage = "An error occurred updating food info."

@@ -56,7 +56,7 @@ struct ProfileView: View {
                                     
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) { //give the server some time to update
                                         Task {
-                                            await vm.fetchAllFoods()
+                                            await vm.updateInfoForFood(foodId: review.foodId)
                                         }
                                     }
                                 } label: {

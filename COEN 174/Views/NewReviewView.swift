@@ -113,7 +113,7 @@ struct NewReviewView: View {
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) { //give the server some time to update
                     Task {
-                        await viewModel.fetchAllFoods()
+                        await viewModel.updateInfoForFood(foodId: food.foodId)
                     }
                 }
                 print("Success! Code: \(code)")

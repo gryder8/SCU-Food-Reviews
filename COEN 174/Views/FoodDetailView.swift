@@ -36,12 +36,7 @@ struct FoodDetailView: View {
                         }
                         .padding(.trailing, 10)
                     }
-                    .navigationDestination(for: NewReview.self) { _ in
-                        NewReviewView(food: self.food)
-                            .environmentObject(navModel)
-                            .environmentObject(viewModel)
-                            .environmentObject(authModel)
-                    }
+                    
                     
                     Text(food.totalReviews != 1 ? "\(food.totalReviews) Reviews" : "\(food.totalReviews) Review")
                     if viewModel.errorMessage != nil {
@@ -106,7 +101,14 @@ struct FoodDetailView: View {
             
             Spacer()
         }
+        .navigationDestination(for: NewReview.self) { _ in
+            NewReviewView(food: self.food)
+                .environmentObject(navModel)
+                .environmentObject(viewModel)
+                .environmentObject(authModel)
+        }
     }
+    
 }
 
 //struct FoodDetailView_Previews: PreviewProvider {
