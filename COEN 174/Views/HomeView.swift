@@ -147,7 +147,8 @@ struct HomeView: View {
                         .foregroundColor(.white)
                         .overlay(Image(systemName: "person.crop.circle.fill").font(.system(size: MENUBAR_BUTTON_SIZE/1.2)), alignment: .center)
                 }
-                Spacer()
+                .padding(.horizontal, -5)
+                //Spacer()
                 Button {
                     showingAddFoodCover.toggle()
                 } label: {
