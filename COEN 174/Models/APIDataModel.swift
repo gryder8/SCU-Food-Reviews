@@ -128,7 +128,7 @@ class APIDataModel: ObservableObject {
             let allFood: AllFoodResult = try JSONDecoder().decode(AllFoodResult.self, from: resultData)
             print(allFood)
             DispatchQueue.main.async {
-                self.foods = allFood.foods
+                self.foods = allFood.foods //UPDATE FOODS!
 
                 completion(.success(allFood.foods))
                 print("Foods now has \(self.foods.count) entries")

@@ -111,9 +111,9 @@ struct NewReviewView: View {
                 Task.init(priority: .userInitiated) {
                     await viewModel.queryReviewsForFoodFromServer(with:food.foodId, refreshing: true)
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { //give the server some time to update
-                    Task.init(priority: .high) {
-                        await viewModel.updateInfoForFood(foodId: food.foodId)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) { //give the server some time to update
+                    Task {
+                        await viewModel.fetchAllFoods()
                     }
                 }
                 print("Success! Code: \(code)")

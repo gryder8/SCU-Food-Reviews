@@ -27,7 +27,7 @@ struct ProfileView: View {
                     Text(errorMsg)
                         .multilineTextAlignment(.center)
                         .foregroundColor(.red)
-                } else if (vm.fetchingUserReviews) {
+                } else if (vm.fetchingUserReviews || vm.removingReview) {
                     LoadingView(text: "Loading\nReviews")
                         .padding()
                 } else if (!vm.userReviews.isEmpty) {
@@ -54,8 +54,10 @@ struct ProfileView: View {
                                         await vm.removeUserReview(reviewId: review.reviewId)
                                     }
                                     
-                                    Task.init(priority: .background) {
-                                        await vm.updateInfoForFood(foodId: review.foodId)
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) { //give the server some time to update
+                                        Task {
+                                            await vm.fetchAllFoods()
+                                        }
                                     }
                                 } label: {
                                     Label("Delete", systemImage: "trash.fill")
