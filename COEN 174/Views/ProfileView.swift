@@ -50,7 +50,10 @@ struct ProfileView: View {
                                 
                                 Button(role: .destructive) {
                                     print("Delete review selected")
-                                    //TODO: Call new Delete endpoint
+                                    Task {
+                                        //NOTE: Upon success of this, the review is removed locally to eliminate the need for another API call
+                                        await vm.removeUserReview(reviewId: review.reviewId)
+                                    }
                                 } label: {
                                     Label("Delete", systemImage: "trash.fill")
                                 }

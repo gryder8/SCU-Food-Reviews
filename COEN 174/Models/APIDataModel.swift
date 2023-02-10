@@ -312,7 +312,7 @@ class APIDataModel: ObservableObject {
                 
                 if let responseCode = (response as? HTTPURLResponse)?.statusCode {
                     guard responseCode == 200 else {
-                        print("Invalid response code to remove review with id: \(reviewId)")
+                        print("Invalid response code to remove review with id: \(reviewId): Code \(responseCode)")
                         if responseCode >= 500 {
                             completion(.failure(URLError(.badServerResponse)))
                         } else {
