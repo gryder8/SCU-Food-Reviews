@@ -44,6 +44,12 @@ struct FoodDetailView: View {
                     }
                     
                     Text(food.totalReviews != 1 ? "\(food.totalReviews) Reviews" : "\(food.totalReviews) Review")
+                    if viewModel.errorMessage != nil {
+                        Text(viewModel.errorMessage!)
+                            .foregroundColor(.red)
+                            .multilineTextAlignment(.leading)
+                            .font(.caption.italic())
+                    }
                     Text("Reviews")
                         .font(.title)
                         .padding(.top)

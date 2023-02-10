@@ -75,21 +75,23 @@ class APIDataModel: ObservableObject {
                 guard let responseData = responseData else { return }
                 
                 if let responseJSONData = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) {
-                    print("Response JSON data = \n\(responseJSONData)")
+                    print("Response JSON data for updating food = \n\(responseJSONData)")
                 }
                 
                 ///Try decoding data
                 do {
-                    let latestFood: Food = try JSONDecoder().decode(Food.self, from: responseData)
-                    print(latestFood)
+                    let updateFoodResponse: GetFoodResponse = try JSONDecoder().decode(GetFoodResponse.self, from: responseData)
+                    let updatedFood = updateFoodResponse.food
+                    print("Got updated food: \(updatedFood)")
                     DispatchQueue.main.async { [weak self] in
                         //remove and replace
                         self?.foods.removeAll(where: { food in
-                            food.foodId == latestFood.foodId
+                            food.foodId == updatedFood.foodId
                         })
-                        self?.foods.append(latestFood)
-                        completion(.success(latestFood))
-                        print("Newest food info: \(latestFood)")
+
+                        self?.foods.append(updatedFood)
+                        completion(.success(updatedFood))
+                        print("Newest food info: \(updatedFood)")
                     }
                 } catch {
                     print(error)

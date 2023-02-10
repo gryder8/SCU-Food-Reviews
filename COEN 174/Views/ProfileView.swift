@@ -27,8 +27,7 @@ struct ProfileView: View {
                     Text(errorMsg)
                         .multilineTextAlignment(.center)
                         .foregroundColor(.red)
-                }
-                else if (vm.fetchingUserReviews) {
+                } else if (vm.fetchingUserReviews) {
                     LoadingView(text: "Loading\nReviews")
                         .padding()
                 } else if (!vm.userReviews.isEmpty) {
@@ -53,6 +52,10 @@ struct ProfileView: View {
                                     Task {
                                         //NOTE: Upon success of this, the review is removed locally to eliminate the need for another API call
                                         await vm.removeUserReview(reviewId: review.reviewId)
+                                    }
+                                    
+                                    Task.init(priority: .background) {
+                                        await vm.updateInfoForFood(foodId: review.foodId)
                                     }
                                 } label: {
                                     Label("Delete", systemImage: "trash.fill")

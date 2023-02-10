@@ -31,8 +31,8 @@ struct Food: Codable, Identifiable, Hashable, CustomStringConvertible {
         return foodId
     }
     let name: String
-    let rating: Double
-    let totalReviews: Int
+    var rating: Double
+    var totalReviews: Int
     private let current: String
     private let trending: String
     private let featured: String
@@ -95,4 +95,8 @@ struct Review: Identifiable, Hashable, Codable {
 
 struct ReviewsResponse: Codable {
     let reviews: [Review]
+}
+
+struct GetFoodResponse: Codable {
+    let food: Food
 }
