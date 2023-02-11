@@ -62,6 +62,9 @@ struct HomeView: View {
                                             Task {
                                                 await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
                                             }
+                                            Task {
+                                                await viewModel.updateInfoForFood(foodId: food.foodId)
+                                            }
                                             navModel.navPath.append(food)
                                         } label: {
                                             MealHomeViewCell(food: food)

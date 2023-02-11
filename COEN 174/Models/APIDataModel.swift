@@ -35,7 +35,7 @@ class APIDataModel: ObservableObject {
         let url: URL = URL(string: urlEndpointString)!
         
         print("Using URL: \(url) with foodID: \(foodId)")
-        var request = URLRequest(url: url)
+        var request = URLRequest(url: url, cachePolicy: .reloadRevalidatingCacheData)
         request.httpMethod = "POST"
         
         request.allHTTPHeaderFields = [
