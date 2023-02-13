@@ -19,6 +19,18 @@ struct ProfileView: View {
     @State private var showingEditCover: Bool = false
     @State private var reviewForEdit: Review? = nil
     
+    @State private var searchQuery: String = ""
+    
+    private var reviewsForDisplay: [Review] {
+        if (searchQuery.isEmpty) {
+            return vm.userReviewsSortedByMostRecent
+        } else {
+            return vm.userReviewsSortedByMostRecent.filter({review in
+                review.title?.localizedCaseInsensitiveContains(searchQuery) ?? false || review.body?.localizedCaseInsensitiveContains(searchQuery) ?? false
+            })
+        }
+    }
+    
     var body: some View {
         ZStack {
             AppBackground()
@@ -28,43 +40,56 @@ struct ProfileView: View {
                         .multilineTextAlignment(.center)
                         .foregroundColor(.red)
                 } else if (vm.fetchingUserReviews || vm.removingReview) {
-                    LoadingView(text: "Loading\nReviews")
+                    LoadingView(text: vm.removingReview ? "Updating" : "Loading\nReviews")
                         .padding()
                 } else if (!vm.userReviews.isEmpty) {
                     Text("Your Reviews")
                         .font(.title.bold())
                         .padding(.bottom, -5)
-                    List(vm.userReviewsSortedByMostRecent) { review in
-                        ReviewView(review: review, showsFoodInfo: true)
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(.hidden)
-                            .swipeActions(allowsFullSwipe: false) {
-                                Button {
-                                    //print("Edit selected on review: \(review)")
-                                    reviewForEdit = review
-                                } label: {
-                                    Label("Edit", systemImage: "pencil")
-                                }
-                                .tint(.blue)
-                                
-                                Button(role: .destructive) {
-                                    print("Delete review selected")
-                                    Task {
-                                        //NOTE: Upon success of this, the review is removed locally to eliminate the need for another API call
-                                        await vm.removeUserReview(reviewId: review.reviewId)
-                                    }
-                                    
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) { //give the server some time to update
-                                        Task {
-                                            await vm.updateInfoForFood(foodId: review.foodId)
-                                        }
-                                    }
-                                } label: {
-                                    Label("Delete", systemImage: "trash.fill")
-                                }
-                            }
-                            
+                    if (reviewsForDisplay.isEmpty) {
+                        Text("No reviews found, try a different search.")
+                            .multilineTextAlignment(.center)
+                            .font(.headline.bold())
                     }
+                    List {
+                        ForEach(reviewsForDisplay) { review in
+                            ReviewView(review: review, showsFoodInfo: true)
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
+                                .swipeActions(allowsFullSwipe: false) {
+                                    Button {
+                                        //print("Edit selected on review: \(review)")
+                                        reviewForEdit = review
+                                    } label: {
+                                        Label("Edit", systemImage: "pencil")
+                                    }
+                                    .tint(.blue)
+                                    
+                                    Button(role: .destructive) {
+                                        print("Delete review selected")
+                                        Task {
+                                            //NOTE: Upon success of this, the review is removed locally to eliminate the need for another API call
+                                            await vm.removeUserReview(reviewId: review.reviewId)
+                                        }
+                                        
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { //give the server some time to update
+                                            Task {
+                                                await vm.updateInfoForFood(foodId: review.foodId)
+                                            }
+                                        }
+                                    } label: {
+                                        Label("Delete", systemImage: "trash.fill")
+                                    }
+                                }
+                            
+                        }
+                        if (reviewsForDisplay.isEmpty) {
+                            Spacer()
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
+                        }
+                    }
+                    .searchable(text: $searchQuery, placement: .automatic, prompt: Text("Search Your Reviews"))
                     .onChange(of: reviewForEdit) { val in //needed to make sure the non-nil review is passed in, for some reason it is nil when we attach directly
                         guard val != nil else { return }
                         showingEditCover = true
@@ -84,6 +109,7 @@ struct ProfileView: View {
                     .padding(.leading, -20)
                     .scrollContentBackground(.hidden)
                 }
+                
                 Button("Sign Out") {
                     confirmSignOut = true
                 }
@@ -107,7 +133,7 @@ struct ProfileView: View {
                     secondaryButton: .cancel()
                 )
             }
-        .padding()
+            .padding()
         }
     }
 }

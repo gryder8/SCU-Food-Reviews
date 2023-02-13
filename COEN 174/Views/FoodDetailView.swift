@@ -12,10 +12,14 @@ struct NewReview: Equatable, Hashable {}
 
 struct FoodDetailView: View {
     
-    var food: Food
+    @State var food: Food
     @EnvironmentObject private var navModel: NavigationModel
     @EnvironmentObject private var viewModel: ViewModel
     @EnvironmentObject private var authModel: UserAuthModel
+    
+    init(food: Food) {
+        self.food = food
+    }
     
     var body: some View {
         ZStack {
@@ -106,6 +110,11 @@ struct FoodDetailView: View {
                 .environmentObject(navModel)
                 .environmentObject(viewModel)
                 .environmentObject(authModel)
+        }
+        .onAppear {
+            if let upToDateFood = viewModel.foodFromID(foodId: food.foodId) {
+                self.food = upToDateFood
+            }
         }
     }
     

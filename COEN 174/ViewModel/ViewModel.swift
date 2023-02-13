@@ -276,7 +276,9 @@ class ViewModel: ObservableObject {
             })
         }
         
-        return result
+        return result.sorted(by: {f1, f2 in
+            f1.rating > f2.rating
+        })
     }
     
     private var dataForDisplay: [Food] {

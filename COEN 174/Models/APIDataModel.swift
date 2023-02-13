@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class APIDataModel: ObservableObject {
     
@@ -28,7 +29,7 @@ class APIDataModel: ObservableObject {
     ///foodId: [Review]
     @Published var foodReviews: [String : [Review]] = [:]
     @Published var userReviews: [Review] = []
-
+    
     
     func updateFood(foodId: String, completion: @escaping (Result<Food, Error>) -> ()) async {
         let urlEndpointString = baseURLString+"getFood"
@@ -85,11 +86,13 @@ class APIDataModel: ObservableObject {
                     print("Got updated food: \(updatedFood)")
                     DispatchQueue.main.async { [weak self] in
                         //remove and replace
-                        self?.foods.removeAll(where: { food in
-                            food.foodId == updatedFood.foodId
-                        })
-
-                        self?.foods.append(updatedFood)
+                        withAnimation {
+                            self?.foods.removeAll(where: { food in
+                                food.foodId == updatedFood.foodId
+                            })
+                            
+                            self?.foods.append(updatedFood)
+                        }
                         self?.objectWillChange.send()
                         completion(.success(updatedFood))
                         print("Newest food info: \(updatedFood)")

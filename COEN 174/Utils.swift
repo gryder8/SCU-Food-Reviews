@@ -37,7 +37,7 @@ struct AppBackground: View {
     var reversed = false
     
     var body: some View {
-        LinearGradient(colors: reversed ? [.accentColor.opacity(0.8), .accentColor.opacity(0.65)].reversed() : [.accentColor.opacity(0.8), .accentColor.opacity(0.65)], startPoint: .top, endPoint: .bottom)
+        LinearGradient(colors: reversed ? [.accentColor.opacity(0.8), .accentColor.opacity(0.65)].reversed() : [.accentColor.opacity(0.8), .accentColor.opacity(0.65)], startPoint: .topLeading, endPoint: .bottomTrailing)
             .edgesIgnoringSafeArea(.all)
     }
 }
