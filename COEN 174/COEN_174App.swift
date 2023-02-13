@@ -16,17 +16,18 @@ struct COEN_174App: App {
     
     var body: some Scene {
         WindowGroup {
-            NavigationStack(path: $navModel.navPath) {
-                if (userAuth.isLoggedIn) {
+            if (userAuth.isLoggedIn) {
+                NavigationStack(path: $navModel.navPath) {
                     HomeView()
                         .environmentObject(apiModel)
                         .environmentObject(navModel)
                         .environmentObject(userAuth)
-                } else {
-                    GoogleLoginView()
-                        .environmentObject(userAuth)
                 }
+            } else {
+                GoogleLoginView()
+                    .environmentObject(userAuth)
             }
         }
     }
 }
+

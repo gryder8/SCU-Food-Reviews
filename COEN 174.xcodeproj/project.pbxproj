@@ -34,6 +34,9 @@
 		86A36F7629948D5400F8F048 /* UserAuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A36F7529948D5400F8F048 /* UserAuthModel.swift */; };
 		86A36F782994919C00F8F048 /* GoogleLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A36F772994919C00F8F048 /* GoogleLoginView.swift */; };
 		86A36F7A29949E8400F8F048 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A36F7929949E8400F8F048 /* Secrets.swift */; };
+		86A36F7C2994D34D00F8F048 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A36F7B2994D34D00F8F048 /* ProfileView.swift */; };
+		86A36F7E2994DB6F00F8F048 /* ReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A36F7D2994DB6F00F8F048 /* ReviewView.swift */; };
+		86A36F8029958A0600F8F048 /* ReviewEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A36F7F29958A0600F8F048 /* ReviewEditor.swift */; };
 		86FD928E299302D900A50AFD /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FD928D299302D900A50AFD /* Constants.swift */; };
 		86FD92902993069700A50AFD /* SubmitFoodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FD928F2993069700A50AFD /* SubmitFoodView.swift */; };
 		86FD92942993338000A50AFD /* FoodFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FD92932993338000A50AFD /* FoodFilter.swift */; };
@@ -86,6 +89,9 @@
 		86A36F7529948D5400F8F048 /* UserAuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAuthModel.swift; sourceTree = "<group>"; };
 		86A36F772994919C00F8F048 /* GoogleLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleLoginView.swift; sourceTree = "<group>"; };
 		86A36F7929949E8400F8F048 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
+		86A36F7B2994D34D00F8F048 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		86A36F7D2994DB6F00F8F048 /* ReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewView.swift; sourceTree = "<group>"; };
+		86A36F7F29958A0600F8F048 /* ReviewEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewEditor.swift; sourceTree = "<group>"; };
 		86FD928D299302D900A50AFD /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		86FD928F2993069700A50AFD /* SubmitFoodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitFoodView.swift; sourceTree = "<group>"; };
 		86FD92932993338000A50AFD /* FoodFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodFilter.swift; sourceTree = "<group>"; };
@@ -124,6 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				860D157D2989C61300C97E56 /* RatingView.swift */,
+				86A36F7D2994DB6F00F8F048 /* ReviewView.swift */,
 				862E79BC29809A09004FCF12 /* FiveStarView.swift */,
 				860516BF298A004300550F9A /* RatingSubmissionView.swift */,
 				860516BB2989FA4200550F9A /* LoadingView.swift */,
@@ -147,8 +154,10 @@
 				86FD928F2993069700A50AFD /* SubmitFoodView.swift */,
 				860D157B2989AAA900C97E56 /* FoodDetailView.swift */,
 				860516BD2989FF2100550F9A /* NewReviewView.swift */,
+				86A36F7F29958A0600F8F048 /* ReviewEditor.swift */,
 				862E79BA29809948004FCF12 /* MealHomeViewCell.swift */,
 				86FD92952993379600A50AFD /* FilterSelectionView.swift */,
+				86A36F7B2994D34D00F8F048 /* ProfileView.swift */,
 				860516C1298A1B6F00550F9A /* Utility */,
 			);
 			path = Views;
@@ -370,6 +379,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86A36F8029958A0600F8F048 /* ReviewEditor.swift in Sources */,
 				860D157E2989C61300C97E56 /* RatingView.swift in Sources */,
 				862E79BB29809948004FCF12 /* MealHomeViewCell.swift in Sources */,
 				860D157929899E0700C97E56 /* ViewModel.swift in Sources */,
@@ -386,7 +396,9 @@
 				862E79B6298093D9004FCF12 /* APIDataTypes.swift in Sources */,
 				865D24A22970CD3600C8B2E2 /* COEN_174App.swift in Sources */,
 				862E79BD29809A09004FCF12 /* FiveStarView.swift in Sources */,
+				86A36F7E2994DB6F00F8F048 /* ReviewView.swift in Sources */,
 				860516BC2989FA4200550F9A /* LoadingView.swift in Sources */,
+				86A36F7C2994D34D00F8F048 /* ProfileView.swift in Sources */,
 				86A36F7629948D5400F8F048 /* UserAuthModel.swift in Sources */,
 				860D157C2989AAA900C97E56 /* FoodDetailView.swift in Sources */,
 				86FD92902993069700A50AFD /* SubmitFoodView.swift in Sources */,

@@ -25,13 +25,14 @@ struct Food: Codable, Identifiable, Hashable, CustomStringConvertible {
         return desc
     }
     
+    
     var foodId: String
     var id: String {
         return foodId
     }
     let name: String
-    let rating: Double
-    let totalReviews: Int
+    var rating: Double
+    var totalReviews: Int
     private let current: String
     private let trending: String
     private let featured: String
@@ -71,17 +72,31 @@ struct Review: Identifiable, Hashable, Codable {
     let body: String?
     let title: String?
     let dateCreated: String
+    let dateUpdated: String?
     
     
     var date: Date? {
         return dateFromAPIDateString(dateCreated)
     }
     
+    var updatedDate: Date? {
+        guard let dateUpdated else { return nil }
+        return dateFromAPIDateString(dateUpdated)
+    }
+    
     var relativeDescription: String? {
         return date?.formattedForUIDisplay()
+    }
+    
+    var relativeUpdatedDescription: String? {
+        return updatedDate?.formattedForUIDisplay()
     }
 }
 
 struct ReviewsResponse: Codable {
     let reviews: [Review]
+}
+
+struct GetFoodResponse: Codable {
+    let food: Food
 }

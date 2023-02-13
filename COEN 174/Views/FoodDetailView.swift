@@ -7,120 +7,117 @@
 
 import SwiftUI
 
-private struct ReviewView: View {
-    
-    let review: Review
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            if let title = review.title {
-                Text(title)
-                    .font(.title3)
-                    .padding(.vertical, -5)
-            }
-            RatingView(rating: Double(review.rating), showRatingNum: false)
-                .padding(.leading, -15)
-                .listRowSeparator(.hidden)
-            if let body = review.body {
-                Text(body)
-                    .font(.system(size: 16, design: .rounded))
-            }
-            if let relativeDesc = review.relativeDescription {
-                Text(relativeDesc)
-                    .font(.caption)
-                    .foregroundColor(.gray)
-                    .padding(.top, 5)
-            }
-        }
-    }
-}
 
-struct NewReview: Equatable, Hashable {
-    
-}
+struct NewReview: Equatable, Hashable {}
 
 struct FoodDetailView: View {
     
-    var food: Food
+    @State var food: Food
     @EnvironmentObject private var navModel: NavigationModel
     @EnvironmentObject private var viewModel: ViewModel
     @EnvironmentObject private var authModel: UserAuthModel
     
-    var body: some View {
-        HStack {
-            VStack (alignment: .leading, spacing: 5) {
-                //Text(food.name)
-                //.font(.largeTitle)
-                HStack {
-                    RatingView(rating: food.rating)
-                    Spacer()
-                    Button {
-                        navModel.navPath.append(NewReview())
-                    } label: {
-                        Image(systemName: "square.and.pencil")
-                            .font(.system(size: 24))
-                    }
-                    .padding(.trailing, 10)
-                }
-                .navigationDestination(for: NewReview.self) { _ in
-                    NewReviewView(food: self.food)
-                        .environmentObject(navModel)
-                        .environmentObject(viewModel)
-                        .environmentObject(authModel)
-                }
-                
-                Text(food.totalReviews != 1 ? "\(food.totalReviews) Reviews" : "\(food.totalReviews) Review")
-                Text("Reviews")
-                    .font(.title)
-                    .padding(.top)
-                if viewModel.fetchingReviews {
-                    HStack {
-                        Spacer()
-                        LoadingView()
-                            .transition(.opacity)
-                        Spacer()
-                    }
-                    .padding(.top)
-                } else if let errorMsg = viewModel.errorMessage {
-                    Text(errorMsg)
-                        .font(.system(size: 16).bold())
-                        .foregroundColor(.red)
-                        .multilineTextAlignment(.center)
-                } else if (!viewModel.reviewsForCurrentFood.isEmpty) {
-                    
-                    
-                    List(viewModel.reviewsForCurrentFood.sortedByDate()) { review in
-                        ReviewView(review: review)
-                    }
-                    .refreshable {
-                        await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
-                    }
-                    .listStyle(.inset)
-                    .padding(.leading, -20)
-                } else {
-                    List {
-                        Text("Be the first to write a review!")
-                            .multilineTextAlignment(.center)
-                            .font(.headline)
-                            .padding(.top)
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(.hidden)
-                    }
-                    .refreshable {
-                        await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
-                    }
-                    .listStyle(.inset)
-                    .padding(.leading, -20)
-                    .scrollContentBackground(.hidden)
-                }
-                
-                Spacer()
-            }
-            .padding(.leading, 15)
-            .navigationTitle(food.name)
-        }
-        Spacer()
+    init(food: Food) {
+        self.food = food
     }
+    
+    var body: some View {
+        ZStack {
+            AppBackground()
+                .edgesIgnoringSafeArea(.all)
+            HStack {
+                VStack (alignment: .leading, spacing: 5) {
+                    //Text(food.name)
+                    //.font(.largeTitle)
+                    HStack {
+                        RatingView(rating: food.rating)
+                        Spacer()
+                        Button {
+                            navModel.navPath.append(NewReview())
+                        } label: {
+                            Image(systemName: "square.and.pencil")
+                                .font(.system(size: 24))
+                        }
+                        .padding(.trailing, 10)
+                    }
+                    
+                    
+                    Text(food.totalReviews != 1 ? "\(food.totalReviews) Reviews" : "\(food.totalReviews) Review")
+                    if viewModel.errorMessage != nil {
+                        Text(viewModel.errorMessage!)
+                            .foregroundColor(.red)
+                            .multilineTextAlignment(.leading)
+                            .font(.caption.italic())
+                    }
+                    Text("Reviews")
+                        .font(.title)
+                        .padding(.top)
+                    if viewModel.fetchingReviews {
+                        HStack {
+                            Spacer()
+                            LoadingView()
+                                .transition(.opacity)
+                            Spacer()
+                        }
+                        .padding(.top)
+                    } else if let errorMsg = viewModel.errorMessage {
+                        Text(errorMsg)
+                            .font(.system(size: 16).bold())
+                            .foregroundColor(.red)
+                            .multilineTextAlignment(.center)
+                    } else if (!viewModel.reviewsForCurrentFood.isEmpty) {
+                        
+                        
+                        List(viewModel.currentFoodReviewsSortedByMostRecent) { review in
+                            ReviewView(review: review)
+                                .environmentObject(viewModel)
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
+                        }
+                        .refreshable {
+                            await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
+                        }
+                        .listStyle(.inset)
+                        .padding(.leading, -20)
+                        .scrollContentBackground(.hidden)
+                    } else {
+                        List {
+                            Text("Be the first to write a review!")
+                                .multilineTextAlignment(.center)
+                                .font(.headline)
+                                .padding(.top)
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
+                        }
+                        .refreshable {
+                            await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
+                        }
+                        .listStyle(.inset)
+                        .padding(.leading, -20)
+                        .scrollContentBackground(.hidden)
+                    }
+                    
+                    Spacer()
+                }
+                .padding(.leading, 15)
+                .navigationTitle(food.name)
+            }
+            
+            Spacer()
+        }
+        .navigationDestination(for: NewReview.self) { _ in
+            NewReviewView(food: self.food)
+                .environmentObject(navModel)
+                .environmentObject(viewModel)
+                .environmentObject(authModel)
+        }
+        .onAppear {
+            if let upToDateFood = viewModel.foodFromID(foodId: food.foodId) {
+                self.food = upToDateFood
+            }
+        }
+    }
+    
 }
 
 //struct FoodDetailView_Previews: PreviewProvider {

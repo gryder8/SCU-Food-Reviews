@@ -23,10 +23,14 @@ class UserAuthModel: ObservableObject {
             self.userId = id
             let givenName = user.profile?.givenName
             self.userName = givenName ?? ""
-            self.isLoggedIn = true
+            withAnimation(.linear) {
+                self.isLoggedIn = true
+            }
             print("Signed in user with id: \(userId)")
         }else{
-            self.isLoggedIn = false
+            withAnimation(.linear) {
+                self.isLoggedIn = false
+            }
             self.userName = "Not Logged In"
             self.errorMessage = ""
         }

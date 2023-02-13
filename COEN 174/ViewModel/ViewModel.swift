@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 class ViewModel: ObservableObject {
-    private let model = APIDataModel.shared
+    private let apiModel = APIDataModel.shared
     
     private var initiallyFetched = false
     
@@ -18,16 +18,38 @@ class ViewModel: ObservableObject {
     @Published var displayData: [Food] = []
     @Published var fetchingData: Bool = false
     @Published var fetchingReviews: Bool = false
-    
+    @Published var fetchingUserReviews: Bool = false
+    @Published var userReviews: [Review] = []
     @Published var reviewsForCurrentFood: [Review] = []
+    @Published var removingReview: Bool = false
     
     @Published var errorMessage: String? = nil
+    
+    static private let errorMessagePersistanceDuration = 3.0
+    
+    func foodFromID(foodId: String) -> Food? {
+        return apiModel.foods.first(where: { food in
+            food.foodId == foodId
+        })
+    }
+    
+    var userReviewsSortedByMostRecent: [Review] {
+        return userReviews.sorted(by: {r1, r2 in
+            r1.updatedDate ?? r1.date ?? Date() > r2.updatedDate ?? r2.date ?? Date()
+        })
+    }
+    
+    var currentFoodReviewsSortedByMostRecent: [Review] {
+        return reviewsForCurrentFood.sorted(by: {r1, r2 in
+            r1.updatedDate ?? r1.date ?? Date() > r2.updatedDate ?? r2.date ?? Date()
+        })
+    }
     
     func queryReviewsForFoodFromServer(with foodId: String, refreshing: Bool = false) async {
         DispatchQueue.main.async { [weak self] in
             self?.fetchingReviews = true
         }
-        if let reviews = model.foodReviews[foodId], !refreshing { //utilize run-time cache held by APIModel
+        if let reviews = apiModel.foodReviews[foodId], !refreshing { //utilize run-time cache held by APIModel
             DispatchQueue.main.async {
                 self.reviewsForCurrentFood = reviews
             }
@@ -35,7 +57,7 @@ class ViewModel: ObservableObject {
             return
         }
         
-        await model.getReviewsForFood(with: foodId, completion: { [weak self] result in
+        await apiModel.getReviewsForFood(with: foodId, completion: { [weak self] result in
             switch result {
             case .success(let reviews):
                 DispatchQueue.main.async { [weak self] in
@@ -56,14 +78,89 @@ class ViewModel: ObservableObject {
         })
     }
     
+    func loadUserReviewsFromServer(userId: String) async {
+        DispatchQueue.main.async {
+            self.fetchingUserReviews = true
+        }
+        await apiModel.getUserReviews(for: userId, completion: { result in
+            switch (result) {
+                case .success(let reviews):
+                print("Found \(reviews.count) reviews for the current user")
+                DispatchQueue.main.async { [weak self] in
+                    self?.userReviews = reviews
+                    self?.fetchingUserReviews = false
+                }
+            case .failure(let error):
+                print("Getting user reviews failed with error: \(error)")
+                DispatchQueue.main.async { [weak self] in
+                    self?.errorMessage = "An error occurred getting your reviews. Try again later."
+                    self?.fetchingUserReviews = false
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + ViewModel.errorMessagePersistanceDuration) { [weak self] in
+                    self?.errorMessage = nil
+                }
+
+            }
+            
+        })
+    }
+        
+    func updateInfoForFood(foodId: String) async {
+        await apiModel.updateFood(foodId: foodId) { [weak self] result in
+            switch (result) {
+            case .success(let food):
+                print("Succesfully updated food: \(food)")
+                self?.objectWillChange.send()
+            case .failure(let error):
+                DispatchQueue.main.async { [weak self] in
+                    self?.errorMessage = "An error occurred updating food info."
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + ViewModel.errorMessagePersistanceDuration) { [weak self] in
+                    self?.errorMessage = nil
+                }
+                print("Error updating food: \(error)")
+            }
+        }
+    }
+    
+    //TODO: Call
+    func removeUserReview(reviewId: String) async {
+        DispatchQueue.main.async {
+            self.removingReview = true
+        }
+        await apiModel.removeReview(reviewId: reviewId) { [weak self] result in
+            switch (result) {
+            case .success(let code):
+                print("Success with code: \(code)")
+                DispatchQueue.main.async { [weak self] in
+                    self?.userReviews.removeAll(where: { review in //remove from local storage
+                        review.reviewId == reviewId
+                    })
+                    self?.removingReview = false
+                }
+            case .failure(let error):
+                print("Error removing review: \(error)")
+                DispatchQueue.main.async { [weak self] in
+                    self?.errorMessage = "Failed to remove review, try again later."
+                    self?.removingReview = false
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + ViewModel.errorMessagePersistanceDuration) { [weak self] in
+                    self?.errorMessage = nil
+                }
+            }
+        }
+    }
+    
     func loadReviewsForFood(with foodId: String) {
         DispatchQueue.main.async { [weak self] in
-            self?.reviewsForCurrentFood = self?.model.foodReviews[foodId] ?? []
+            self?.reviewsForCurrentFood = self?.apiModel.foodReviews[foodId] ?? []
         }
     }
     
     func fetchAllFoods() async {
-        await model.getAllFoods(completion: {[weak self] result in
+        await apiModel.getAllFoods(completion: {[weak self] result in
             
             switch result {
             case .success(let food):
@@ -89,7 +186,7 @@ class ViewModel: ObservableObject {
     }
     
     func initialize(_ forceRefresh: Bool = false) {
-        guard !model.isFetchingAllFoods, !initiallyFetched else { return }
+        guard !apiModel.isFetchingAllFoods, !initiallyFetched else { return }
         if (forceRefresh) {
             DispatchQueue.main.async { [self] in
                 withAnimation(.easeInOut) {
@@ -105,7 +202,7 @@ class ViewModel: ObservableObject {
                 }
             }
             
-        } else if (model.foods.isEmpty && !initiallyFetched) {
+        } else if (apiModel.foods.isEmpty && !initiallyFetched) {
             DispatchQueue.main.async { [self] in
                 withAnimation(.easeInOut) {
                     fetchingData = true
@@ -127,19 +224,19 @@ class ViewModel: ObservableObject {
     }
     
     var mealsSortedByRating: [Food] {
-        return model.foods.sorted(by: {f1, f2 in
+        return apiModel.foods.sorted(by: {f1, f2 in
             f1.rating > f2.rating
         })
     }
     
     var mealsSortedByName: [Food] {
-        return model.foods.sorted(by: {f1, f2 in
+        return apiModel.foods.sorted(by: {f1, f2 in
             return f1.name < f2.name
         })
     }
     
     var removingNonRatedMeals: [Food] {
-        return model.foods.filter({food in
+        return apiModel.foods.filter({food in
             food.totalReviews > 0
         })
     }
@@ -149,7 +246,7 @@ class ViewModel: ObservableObject {
             return dataForDisplay
         }
         
-        var result = model.foods
+        var result = apiModel.foods
         
         if filter.glutenFree { result.removeAll(where: { food in
             !(food.tags?.contains("Gluten Free") ?? false)
@@ -179,11 +276,13 @@ class ViewModel: ObservableObject {
             })
         }
         
-        return result
+        return result.sorted(by: {f1, f2 in
+            f1.rating > f2.rating
+        })
     }
     
     private var dataForDisplay: [Food] {
-        return model.foods.sorted(by: {f1, f2 in
+        return apiModel.foods.sorted(by: {f1, f2 in
             f1.rating > f2.rating
         })
     }

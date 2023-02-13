@@ -12,4 +12,9 @@ class NavigationModel: ObservableObject {
     
     @Published var navPath = NavigationPath()
     
+    func popToRoot() {
+        DispatchQueue.main.async {
+            self.navPath = NavigationPath()
+        }
+    }
 }

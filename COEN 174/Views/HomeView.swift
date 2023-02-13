@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+private struct ShowProfileView: Equatable, Hashable { //for nav
+    
+}
+
 struct HomeView: View {
     
     private let MENUBAR_BUTTON_SIZE: CGFloat = 30
@@ -58,6 +62,9 @@ struct HomeView: View {
                                             Task {
                                                 await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
                                             }
+                                            Task {
+                                                await viewModel.updateInfoForFood(foodId: food.foodId)
+                                            }
                                             navModel.navPath.append(food)
                                         } label: {
                                             MealHomeViewCell(food: food)
@@ -99,6 +106,12 @@ struct HomeView: View {
                                 .environmentObject(viewModel)
                                 .environmentObject(authModel)
                         }
+                        .navigationDestination(for: ShowProfileView.self) { _ in
+                            ProfileView()
+                                .environmentObject(navModel)
+                                .environmentObject(viewModel)
+                                .environmentObject(authModel)
+                        }
                         .listStyle(.inset)
                         .padding()
                         
@@ -126,6 +139,21 @@ struct HomeView: View {
 
         .toolbar {
             ToolbarItemGroup {
+                Button {
+                    Task.init(priority: .userInitiated) {
+                        await viewModel.loadUserReviewsFromServer(userId: authModel.userId)
+                    }
+                    self.navModel.navPath.append(ShowProfileView())
+                } label: {
+                    Circle()
+                        .frame(width: MENUBAR_BUTTON_SIZE, height: MENUBAR_BUTTON_SIZE, alignment: .center)
+                        .foregroundColor(.white)
+                        .overlay(Image(systemName: "person.crop.circle.fill")
+                            .font(.system(size: MENUBAR_BUTTON_SIZE/1.2))
+                                 , alignment: .center)
+                }
+                .padding(.horizontal, -5)
+                //Spacer()
                 Button {
                     showingAddFoodCover.toggle()
                 } label: {

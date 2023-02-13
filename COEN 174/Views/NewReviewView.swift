@@ -101,7 +101,7 @@ struct NewReviewView: View {
             return
         }
         
-        creator.submitReview(rating: self.currentRating!, text: self.bodyText, title: self.title, reviewId: UUID().uuidString, foodId: food.foodId, userId: authModel.userId, completion: { result in
+        creator.submitReview(rating: self.currentRating!, text: self.bodyText, title: self.title, foodId: food.foodId, userId: authModel.userId, completion: { result in
             
             switch result {
             case .failure(let error):
@@ -111,13 +111,20 @@ struct NewReviewView: View {
                 Task.init(priority: .userInitiated) {
                     await viewModel.queryReviewsForFoodFromServer(with:food.foodId, refreshing: true)
                 }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) { //give the server some time to update
+                    Task {
+                        await viewModel.updateInfoForFood(foodId: food.foodId)
+                    }
+                }
                 print("Success! Code: \(code)")
                 responseText = "Review Submitted!"
             }
-            let pathLen = navModel.navPath.count
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                guard navModel.navPath.count == pathLen else { return } //avoid popping off the view if the user does it for us
-                navModel.navPath.removeLast()
+            let desiredPathLen = navModel.navPath.count-2 //back to main view
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.25) {
+                let popLen = navModel.navPath.count - desiredPathLen
+                guard popLen != 0 else { return } //avoid popping off the view if the user does it for us
+                print("Popping back \(popLen) views")
+                navModel.navPath.removeLast(popLen)
             }
             
         })

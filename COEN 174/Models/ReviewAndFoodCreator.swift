@@ -9,11 +9,11 @@ import Foundation
 
 class ReviewAndFoodCreator: ObservableObject {
     
-        
+    
     @Published var submittingReview: Bool = false
     @Published var submittingFood: Bool = false
     
-    func submitReview(rating: Int, text: String, title: String, reviewId: String, foodId: String, userId: String, completion: @escaping (Result<Int, Error>) -> ()) {
+    func submitReview(reviewIdForUpdate: String? = nil, rating: Int, text: String, title: String, foodId: String, userId: String, completion: @escaping (Result<Int, Error>) -> ()) {
         print("Submitting Review!")
         
         DispatchQueue.main.async {
@@ -30,8 +30,7 @@ class ReviewAndFoodCreator: ObservableObject {
             "Accept": "application/json"
         ]
         
-        let jsonDict = generateJSONDictForReviewTransmission(rating: rating, text: text, title: title, reviewId: reviewId, foodId: foodId, userId: userId)
-        
+        let jsonDict = generateJSONDictForReviewTransmission(reviewIdForUpdate: reviewIdForUpdate, rating: rating, text: text, title: title, foodId: foodId, userId: userId)
         
         
         do {
@@ -76,6 +75,7 @@ class ReviewAndFoodCreator: ObservableObject {
             }
         }
     }
+    
     
     
     /*
@@ -152,9 +152,9 @@ class ReviewAndFoodCreator: ObservableObject {
     /*
      Request: { ‘reviewId’: <optional>String, ‘userId’: String, ‘foodId’: String, ‘rating’: Num, ‘title’: <optional>String, ‘body’: <optional>String }
      */
-    private func generateJSONDictForReviewTransmission(rating: Int, text: String, title: String, reviewId: String, foodId: String, userId: String) -> [String: Any] {
+    private func generateJSONDictForReviewTransmission(reviewIdForUpdate: String? = nil, rating: Int, text: String, title: String, foodId: String, userId: String) -> [String: Any] {
         //let userID = "Gavin"
-        let dict: [String: Any] = [
+        var dict: [String: Any] = [
             //"reviewId":reviewId,
             "userId":userId,
             "foodId":foodId,
@@ -162,6 +162,10 @@ class ReviewAndFoodCreator: ObservableObject {
             "title":title,
             "body": text
         ]
+        
+        if let reviewId = reviewIdForUpdate {
+            dict["reviewId"] = reviewId
+        }
         print("Generated dict of \(dict.keys.count) keys for transmission")
         return dict
     }
