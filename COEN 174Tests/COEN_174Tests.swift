@@ -29,7 +29,7 @@ final class COEN_174Tests: XCTestCase {
     /*
      **XCTest runs things alphabetically!!**
      */
-    func testA() async throws {
+    func testFetch() async throws {
         await model.getAllFoods(completion: { result in
             switch result {
             case .success(let foods):
@@ -44,8 +44,8 @@ final class COEN_174Tests: XCTestCase {
     }
     
     
-    ///Precondition: Do not call standalone, API data must be fetched first! This method should be called by `testFetch()` after it passes
-    func testB() {
+    ///Precondition: Do not call standalone, API data must be fetched first! This method should be called after `testFetch()`
+    func testSort() {
         XCTAssertFalse(vm.mealsSortedByName.isEmpty)
         if let first = vm.mealsSortedByName.first, let last = vm.mealsSortedByName.last {
             print(first.name)
@@ -95,7 +95,7 @@ final class COEN_174Tests: XCTestCase {
         // This is an example of a performance test case.
         self.measure {
             // Put the code you want to measure the time of here.
-            testArrayToString()
+            testSort()
         }
     }
 
