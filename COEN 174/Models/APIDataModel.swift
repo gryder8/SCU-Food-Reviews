@@ -24,11 +24,11 @@ class APIDataModel: ObservableObject {
     var isFetchingReview = false
     
     //MARK: - Published Fields
-    @Published var foods: [Food] = [Food]()
+    @Published private(set) var foods: [Food] = [Food]()
     
     ///foodId: [Review]
-    @Published var foodReviews: [String : [Review]] = [:]
-    @Published var userReviews: [Review] = []
+    @Published private(set) var foodReviews: [String : [Review]] = [:]
+    @Published private(set) var userReviews: [Review] = []
     
     
     func updateFood(foodId: String, completion: @escaping (Result<Food, Error>) -> ()) async {

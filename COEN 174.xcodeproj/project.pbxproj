@@ -14,12 +14,13 @@
 		860D157C2989AAA900C97E56 /* FoodDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860D157B2989AAA900C97E56 /* FoodDetailView.swift */; };
 		860D157E2989C61300C97E56 /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860D157D2989C61300C97E56 /* RatingView.swift */; };
 		860D15802989D74300C97E56 /* ReviewAndFoodCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860D157F2989D74300C97E56 /* ReviewAndFoodCreator.swift */; };
+		861D1891299C732800610586 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 861D1890299C732800610586 /* GoogleSignIn */; };
+		861D1897299C776A00610586 /* SymbolsAndBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861D1896299C776A00610586 /* SymbolsAndBackground.swift */; };
 		862E79B32980932D004FCF12 /* APIDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862E79B22980932D004FCF12 /* APIDataModel.swift */; };
 		862E79B6298093D9004FCF12 /* APIDataTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862E79B5298093D9004FCF12 /* APIDataTypes.swift */; };
 		862E79B929809664004FCF12 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862E79B829809664004FCF12 /* Utils.swift */; };
 		862E79BB29809948004FCF12 /* MealHomeViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862E79BA29809948004FCF12 /* MealHomeViewCell.swift */; };
 		862E79BD29809A09004FCF12 /* FiveStarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862E79BC29809A09004FCF12 /* FiveStarView.swift */; };
-		86403AE92991B447000644BA /* getAllFood.json in Resources */ = {isa = PBXBuildFile; fileRef = 86403AE82991B447000644BA /* getAllFood.json */; };
 		865D24A22970CD3600C8B2E2 /* COEN_174App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865D24A12970CD3600C8B2E2 /* COEN_174App.swift */; };
 		865D24A42970CD3600C8B2E2 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865D24A32970CD3600C8B2E2 /* HomeView.swift */; };
 		865D24A62970CD3800C8B2E2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 865D24A52970CD3800C8B2E2 /* Assets.xcassets */; };
@@ -68,13 +69,13 @@
 		860D157B2989AAA900C97E56 /* FoodDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodDetailView.swift; sourceTree = "<group>"; };
 		860D157D2989C61300C97E56 /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
 		860D157F2989D74300C97E56 /* ReviewAndFoodCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewAndFoodCreator.swift; sourceTree = "<group>"; };
+		861D1896299C776A00610586 /* SymbolsAndBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolsAndBackground.swift; sourceTree = "<group>"; };
 		862E79B22980932D004FCF12 /* APIDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIDataModel.swift; sourceTree = "<group>"; };
 		862E79B5298093D9004FCF12 /* APIDataTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIDataTypes.swift; sourceTree = "<group>"; };
 		862E79B729809595004FCF12 /* COEN-174-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "COEN-174-Info.plist"; sourceTree = SOURCE_ROOT; };
 		862E79B829809664004FCF12 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		862E79BA29809948004FCF12 /* MealHomeViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealHomeViewCell.swift; sourceTree = "<group>"; };
 		862E79BC29809A09004FCF12 /* FiveStarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiveStarView.swift; sourceTree = "<group>"; };
-		86403AE82991B447000644BA /* getAllFood.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = getAllFood.json; sourceTree = "<group>"; };
 		865D249E2970CD3600C8B2E2 /* COEN 174.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "COEN 174.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		865D24A12970CD3600C8B2E2 /* COEN_174App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COEN_174App.swift; sourceTree = "<group>"; };
 		865D24A32970CD3600C8B2E2 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -113,6 +114,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				861D1891299C732800610586 /* GoogleSignIn in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,6 +136,7 @@
 				862E79BC29809A09004FCF12 /* FiveStarView.swift */,
 				860516BF298A004300550F9A /* RatingSubmissionView.swift */,
 				860516BB2989FA4200550F9A /* LoadingView.swift */,
+				861D1896299C776A00610586 /* SymbolsAndBackground.swift */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -144,6 +147,13 @@
 				860D157829899E0700C97E56 /* ViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		861D188F299C732800610586 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		862E79B129809315004FCF12 /* Views */ = {
@@ -183,6 +193,7 @@
 				865D24B12970CD3800C8B2E2 /* COEN 174Tests */,
 				865D24BB2970CD3800C8B2E2 /* COEN 174UITests */,
 				865D249F2970CD3600C8B2E2 /* Products */,
+				861D188F299C732800610586 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -224,7 +235,6 @@
 		865D24B12970CD3800C8B2E2 /* COEN 174Tests */ = {
 			isa = PBXGroup;
 			children = (
-				86403AE82991B447000644BA /* getAllFood.json */,
 				865D24B22970CD3800C8B2E2 /* COEN_174Tests.swift */,
 			);
 			path = "COEN 174Tests";
@@ -278,6 +288,9 @@
 				865D24B02970CD3800C8B2E2 /* PBXTargetDependency */,
 			);
 			name = "COEN 174Tests";
+			packageProductDependencies = (
+				861D1890299C732800610586 /* GoogleSignIn */,
+			);
 			productName = "COEN 174Tests";
 			productReference = 865D24AE2970CD3800C8B2E2 /* COEN 174Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -361,7 +374,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				86403AE92991B447000644BA /* getAllFood.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,6 +412,7 @@
 				860516BC2989FA4200550F9A /* LoadingView.swift in Sources */,
 				86A36F7C2994D34D00F8F048 /* ProfileView.swift in Sources */,
 				86A36F7629948D5400F8F048 /* UserAuthModel.swift in Sources */,
+				861D1897299C776A00610586 /* SymbolsAndBackground.swift in Sources */,
 				860D157C2989AAA900C97E56 /* FoodDetailView.swift in Sources */,
 				86FD92902993069700A50AFD /* SubmitFoodView.swift in Sources */,
 				860516C0298A004300550F9A /* RatingSubmissionView.swift in Sources */,
@@ -749,6 +762,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		861D1890299C732800610586 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 86A36F7029948CF600F8F048 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
 		868CCD152980A04B00A1EC21 /* StarRating */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 868CCD142980A04B00A1EC21 /* XCRemoteSwiftPackageReference "StarRating" */;

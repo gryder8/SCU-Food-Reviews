@@ -3,10 +3,11 @@ import GoogleSignIn
 
 class UserAuthModel: ObservableObject {
     
-    @Published var userName: String = ""
-    @Published var isLoggedIn: Bool = false
-    @Published var errorMessage: String = ""
-    @Published var userId: String = ""
+    ///Published values, which can only be set here
+    @Published private(set) var userName: String = ""
+    @Published private(set) var isLoggedIn: Bool = false
+    @Published private(set) var errorMessage: String = ""
+    @Published private(set) var userId: String = ""
     
     init(){
         check()
@@ -46,6 +47,11 @@ class UserAuthModel: ObservableObject {
         }
     }
     
+    func validateEmail(_ email: String) -> Bool {
+        let comps = email.components(separatedBy: "@")
+        return comps.count == 2 && comps[1] == "scu.edu"
+    }
+    
     func signIn(){
         
         guard let presentingViewController = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.rootViewController else {return}
@@ -70,7 +76,17 @@ class UserAuthModel: ObservableObject {
                 return
             }
             
-            if !email.contains("@scu.edu") {
+            
+            guard self.validateEmail(email) else {
+                DispatchQueue.main.async {
+                    self.errorMessage = "No valid email domain found in email \(email)"
+                }
+                return
+            }
+            
+            let domain = email.components(separatedBy: "@")[1]
+            
+            if domain != "scu.edu" {
                 DispatchQueue.main.async {
                     self.errorMessage = "You must have an SCU email to use this application."
                     self.isLoggedIn = false
