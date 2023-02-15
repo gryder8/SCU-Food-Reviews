@@ -15,13 +15,13 @@ class ViewModel: ObservableObject {
     
     private let INIT_ANIM_DURATION = 0.5
     
-    @Published var displayData: [Food] = []
-    @Published var fetchingData: Bool = false
-    @Published var fetchingReviews: Bool = false
-    @Published var fetchingUserReviews: Bool = false
-    @Published var userReviews: [Review] = []
-    @Published var reviewsForCurrentFood: [Review] = []
-    @Published var removingReview: Bool = false
+    @Published private(set) var displayData: [Food] = []
+    @Published private(set) var fetchingData: Bool = false
+    @Published private(set) var fetchingReviews: Bool = false
+    @Published private(set) var fetchingUserReviews: Bool = false
+    @Published private(set) var userReviews: [Review] = []
+    @Published private(set) var reviewsForCurrentFood: [Review] = []
+    @Published private(set) var removingReview: Bool = false
     
     @Published var errorMessage: String? = nil
     
