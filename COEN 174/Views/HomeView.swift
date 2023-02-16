@@ -26,6 +26,9 @@ struct HomeView: View {
     
     @State private var searchText: String = ""
     
+    private let viewOptions = ["All Food", "Trending"]
+    @State private var currentViewSelection = "All Food"
+    
     var body: some View {
         ZStack {
             AppBackground()
@@ -48,6 +51,14 @@ struct HomeView: View {
                                 if searchText.isEmpty { foodFilter.searchQuery = nil }
                             }
                     } else {
+                        Picker("Select View", selection: $currentViewSelection) {
+                            ForEach(viewOptions, id: \.self) { option in
+                                Text(option)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        .padding(.horizontal)
+                        
                         if (foods.isEmpty && !searchText.isEmpty) {
                             Text("Nothing found for \(searchText)")
                                 .font(.subheadline)
@@ -77,6 +88,9 @@ struct HomeView: View {
                                 }
                                 .listRowBackground(Color.clear)
                                 .listRowSeparator(Visibility.hidden)
+                            }
+                            .onChange(of: currentViewSelection) { val in
+                                foodFilter.trending = (val == "Trending")
                             }
                             //Makes sure the empty list is invisible
                             if (foods.isEmpty) {
@@ -136,9 +150,12 @@ struct HomeView: View {
                     .transition(.opacity)
             }
         }
-
+        
         .toolbar {
             ToolbarItemGroup {
+                if (viewModel.adminModeEnabled) {
+                    Image(systemName: "person.badge.shield.checkmark")
+                }
                 Button {
                     Task.init(priority: .userInitiated) {
                         await viewModel.loadUserReviewsFromServer(userId: authModel.userId)

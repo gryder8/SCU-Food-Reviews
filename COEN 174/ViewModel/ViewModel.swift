@@ -22,6 +22,7 @@ class ViewModel: ObservableObject {
     @Published private(set) var userReviews: [Review] = []
     @Published private(set) var reviewsForCurrentFood: [Review] = []
     @Published private(set) var removingReview: Bool = false
+    @Published var adminModeEnabled: Bool = false
     
     @Published var errorMessage: String? = nil
     
@@ -31,6 +32,11 @@ class ViewModel: ObservableObject {
         return apiModel.foods.first(where: { food in
             food.foodId == foodId
         })
+    }
+    
+    var trendingFoods: [Food] {
+        print("\(apiModel.trendingFoods.count) foods are trending")
+        return apiModel.trendingFoods
     }
     
     var userReviewsSortedByMostRecent: [Review] {
@@ -187,7 +193,7 @@ class ViewModel: ObservableObject {
     
     func initialize(_ forceRefresh: Bool = false) {
         guard !apiModel.isFetchingAllFoods, !initiallyFetched else { return }
-        if (forceRefresh) {
+        if (forceRefresh) { //force refresh
             DispatchQueue.main.async { [self] in
                 withAnimation(.easeInOut) {
                     fetchingData = true
@@ -241,21 +247,33 @@ class ViewModel: ObservableObject {
         })
     }
     
-    func filteredResults(_ filter: FoodFilter) -> [Food] {
+    func filteredResults(_ filter: FoodFilter, foods: [Food]? = nil) -> [Food] {
         if (filter == FoodFilter()) { //default filter
             return dataForDisplay
         }
         
-        var result = apiModel.foods
+        var result = [Food]()
+        if let foods  {
+            result = foods
+        } else {
+            result = apiModel.foods //all foods
+        }
         
         if filter.glutenFree { result.removeAll(where: { food in
             !(food.tags?.contains("Gluten Free") ?? false)
             })
         }
         
-        if filter.vegan { result.removeAll(where: { food in
-            !(food.tags?.contains("Vegan") ?? false)
-            })
+        if filter.vegan {
+            result.removeAll { food in
+                !(food.tags?.contains("Vegan") ?? false)
+            }
+        }
+        
+        if filter.trending {
+            result.removeAll { food in
+                food.isTrendingFood == false
+            }
         }
         
         if let threshold = filter.minRating {
@@ -280,6 +298,8 @@ class ViewModel: ObservableObject {
             f1.rating > f2.rating
         })
     }
+    
+    
     
     private var dataForDisplay: [Food] {
         return apiModel.foods.sorted(by: {f1, f2 in

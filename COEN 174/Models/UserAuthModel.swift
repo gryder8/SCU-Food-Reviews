@@ -9,6 +9,11 @@ class UserAuthModel: ObservableObject {
     @Published private(set) var errorMessage: String = ""
     @Published private(set) var userId: String = ""
     
+    var isAdmin: Bool {
+        guard let user = GIDSignIn.sharedInstance.currentUser else { return false }
+        return user.profile?.email == "gryder@scu.edu"
+    }
+    
     init(){
         check()
     }

@@ -35,6 +35,14 @@ struct ProfileView: View {
         ZStack {
             AppBackground()
             VStack {
+                if authModel.isAdmin {
+                    Toggle("Admin Mode: \(vm.adminModeEnabled ? "On" : "Off")",isOn: $vm.adminModeEnabled)
+                        .buttonStyle(.borderedProminent)
+                        .toggleStyle(.button)
+                        .foregroundColor(.black)
+                        .tint(.blue)
+                }
+                
                 if let errorMsg = vm.errorMessage, !errorMsg.isEmpty {
                     Text(errorMsg)
                         .multilineTextAlignment(.center)
@@ -89,6 +97,10 @@ struct ProfileView: View {
                                 .listRowSeparator(.hidden)
                         }
                     }
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(Color.material, lineWidth: 3)
+                    )
                     .searchable(text: $searchQuery, placement: .automatic, prompt: Text("Search Your Reviews"))
                     .onChange(of: reviewForEdit) { val in //needed to make sure the non-nil review is passed in, for some reason it is nil when we attach directly
                         guard val != nil else { return }
@@ -106,7 +118,7 @@ struct ProfileView: View {
                         }
                     }
                     .listStyle(.inset)
-                    .padding(.leading, -20)
+                    //.padding(.leading, -20)
                     .scrollContentBackground(.hidden)
                 }
                 

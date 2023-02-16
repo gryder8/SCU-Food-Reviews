@@ -11,26 +11,28 @@ import SwiftUI
 class APIDataModel: ObservableObject {
     
     //MARK: - Singleton Config
-    private init() {
-//        Task.init {
-//            print("Fetching all foods from API...")
-//            await self.getAllFoods()
-//            print("All foods fetched!")
-//        }
-    }
+    private init() {}
     static let shared = APIDataModel()
     
+    //MARK: - Loading States
     var isFetchingAllFoods = false
     var isFetchingReview = false
     
     //MARK: - Published Fields
     @Published private(set) var foods: [Food] = [Food]()
+    //@Published private(set) var trendingFoods: [Food] = [Food]()
     
     ///foodId: [Review]
     @Published private(set) var foodReviews: [String : [Review]] = [:]
     @Published private(set) var userReviews: [Review] = []
     
+    var trendingFoods: [Food] {
+        return self.foods.filter { food in
+            food.isTrendingFood
+        }
+    }
     
+    //MARK: - API Call Functions
     func updateFood(foodId: String, completion: @escaping (Result<Food, Error>) -> ()) async {
         let urlEndpointString = baseURLString+"getFood"
         let url: URL = URL(string: urlEndpointString)!
@@ -129,7 +131,7 @@ class APIDataModel: ObservableObject {
                 }
             }
             
-            let allFood: AllFoodResult = try JSONDecoder().decode(AllFoodResult.self, from: resultData)
+            let allFood: FoodsResult = try JSONDecoder().decode(FoodsResult.self, from: resultData)
             print(allFood)
             DispatchQueue.main.async {
                 self.foods = allFood.foods //UPDATE FOODS!
@@ -152,6 +154,39 @@ class APIDataModel: ObservableObject {
                 
         }
     }
+    
+//    func getTrendingFoods(completion: @escaping (Result<[Food], Error>) -> ()) async {
+//        let urlEndpointString = baseURLString+"getTrendingFood"
+//        let url: URL = URL(string: urlEndpointString)!
+//
+//        do {
+//            let (resultData, response) = try await URLSession.shared.data(from: url)
+//            if let httpResponse = response as? HTTPURLResponse {
+//                guard httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299 else {
+//                    print("***Error: Status \(httpResponse.statusCode) from \(url)")
+//                    completion(.failure(URLError(.badServerResponse)))
+//                    return
+//                }
+//            }
+//
+//            let trendingFood: FoodsResult = try JSONDecoder().decode(FoodsResult.self, from: resultData)
+//            print(trendingFood)
+//            DispatchQueue.main.async {
+//                self.trendingFoods = trendingFood.foods //UPDATE TRENDING FOODS!
+//                completion(.success(trendingFood.foods))
+//                print("Trending foods now has \(self.foods.count) entries")
+//            }
+//
+//        } catch {
+//            if let err = error as? URLError {
+//                print("API call failed!\n\(error)")
+//                completion(.failure(err))
+//            } else {
+//                print("Decoding failed!\n\(error)")
+//                completion(.failure(error))
+//            }
+//        }
+//    }
     
     
     func getReviewsForFood(with foodID: String, completion: @escaping (Result<[Review], Error>) -> ()) async {
@@ -268,7 +303,7 @@ class APIDataModel: ObservableObject {
                 ///Try decoding data
                 do {
                     let allReviewsForUser: ReviewsResponse = try JSONDecoder().decode(ReviewsResponse.self, from: responseData)
-                    print("All Reviews:\n\(allReviewsForUser)")
+                    //print("All Reviews:\n\(allReviewsForUser)")
                     DispatchQueue.main.async { [weak self] in
                         self?.userReviews = allReviewsForUser.reviews
                     }

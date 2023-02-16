@@ -11,6 +11,7 @@ import SwiftUI
 struct FoodFilter: Equatable {
     var vegan: Bool = false
     var glutenFree: Bool = false
+    var trending: Bool = false
     var minRating: Double?
     var minNumReviews: Int?
     var searchQuery: String?
