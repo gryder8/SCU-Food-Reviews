@@ -86,21 +86,27 @@ class ViewModel: ObservableObject {
     
     func loadUserReviewsFromServer(userId: String) async {
         DispatchQueue.main.async {
-            self.fetchingUserReviews = true
+            withAnimation {
+                self.fetchingUserReviews = true
+            }
         }
         await apiModel.getUserReviews(for: userId, completion: { result in
             switch (result) {
                 case .success(let reviews):
                 print("Found \(reviews.count) reviews for the current user")
                 DispatchQueue.main.async { [weak self] in
-                    self?.userReviews = reviews
-                    self?.fetchingUserReviews = false
+                    withAnimation(.linear(duration: 0.6)) {
+                        self?.userReviews = reviews
+                        self?.fetchingUserReviews = false
+                    }
                 }
             case .failure(let error):
                 print("Getting user reviews failed with error: \(error)")
                 DispatchQueue.main.async { [weak self] in
                     self?.errorMessage = "An error occurred getting your reviews. Try again later."
-                    self?.fetchingUserReviews = false
+                    withAnimation {
+                        self?.fetchingUserReviews = false
+                    }
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + ViewModel.errorMessagePersistanceDuration) { [weak self] in
                     self?.errorMessage = nil
