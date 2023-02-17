@@ -95,7 +95,7 @@ class ViewModel: ObservableObject {
                 case .success(let reviews):
                 print("Found \(reviews.count) reviews for the current user")
                 DispatchQueue.main.async { [weak self] in
-                    withAnimation(.linear(duration: 0.6)) {
+                    withAnimation(.easeIn) {
                         self?.userReviews = reviews
                         self?.fetchingUserReviews = false
                     }
