@@ -4,7 +4,8 @@ _Before building or running the code, please note that you need a Mac running Xc
 For now, the app has been tested on the iPhone 14 Pro and 14 Pro Max, but it should run fine on any supported Apple platform._
 
 ###Running the App
-Clone the front-end repo from: https://github.com/gryder8/COEN-174
+Clone the front-end repo from: https://github.com/gryder8/COEN-174  
+
 _You should be able to do this from the Xcode launch screen, but you can clone it normally and simply open it in Xcode as well_
 _Make sure you have the iOS 16 Simulator installed, it should come default with Xcode 14_
 Press CMD+B to build, CMD+R to run on the simulator
