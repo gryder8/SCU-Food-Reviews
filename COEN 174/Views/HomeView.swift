@@ -28,7 +28,7 @@ struct HomeView: View {
     
     private let viewOptions = ["All Food", "Trending"]
     @State private var currentViewSelection = "All Food"
-    
+        
     
     @ViewBuilder
     private func FoodCellButton(food: Food) -> some View {
@@ -110,6 +110,19 @@ struct HomeView: View {
                 HStack {
                     Spacer()
                     FoodCellButton(food: food)
+                        .swipeActions {
+                            if (viewModel.adminModeEnabled) {
+                                Button(role: .destructive) {
+                                    print("Delete food selected!")
+                                    Task {
+                                        await viewModel.removeFood(food: food)
+                                    }
+                                } label: {
+                                    Label("Delete", systemImage: "trash.fill")
+                                }
+                                .cornerRadius(10)
+                            }
+                        }
                     Spacer()
                 }
             }

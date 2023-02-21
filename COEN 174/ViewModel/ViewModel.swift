@@ -22,6 +22,7 @@ class ViewModel: ObservableObject {
     @Published private(set) var userReviews: [Review] = []
     @Published private(set) var reviewsForCurrentFood: [Review] = []
     @Published private(set) var removingReview: Bool = false
+    @Published private(set) var removingFood: Bool = false
     @Published var adminModeEnabled: Bool = false
     
     @Published var errorMessage: String? = nil
@@ -136,7 +137,36 @@ class ViewModel: ObservableObject {
         }
     }
     
-    //TODO: Call
+    func removeFood(food: Food) async {
+        DispatchQueue.main.async {
+            self.removingFood = true
+        }
+        await apiModel.removeFood(foodId: food.foodId) { [weak self] result in
+            switch (result) {
+            case .success(let code):
+                print("Success with code: \(code)")
+                DispatchQueue.main.async { [weak self] in
+                    withAnimation {
+                        self?.displayData.removeAll(where: { foodItem in //remove from local storage
+                            food.foodId == foodItem.foodId
+                        })
+                        self?.removingFood = false
+                    }
+                }
+            case .failure(let error):
+                print("Error removing food: \(error)")
+                DispatchQueue.main.async { [weak self] in
+                    self?.errorMessage = "Failed to remove food, try again later."
+                    self?.removingFood = false
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + ViewModel.errorMessagePersistanceDuration) { [weak self] in
+                    self?.errorMessage = nil
+                }
+            }
+        }
+    }
+    
     func removeUserReview(reviewId: String) async {
         DispatchQueue.main.async {
             self.removingReview = true
