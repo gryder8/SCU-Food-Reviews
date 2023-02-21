@@ -26,6 +26,98 @@ struct HomeView: View {
     
     @State private var searchText: String = ""
     
+    private let viewOptions = ["All Food", "Trending"]
+    @State private var currentViewSelection = "All Food"
+    
+    
+    @ViewBuilder
+    private func FoodCellButton(food: Food) -> some View {
+        Button {
+            Task {
+                await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
+            }
+            Task {
+                await viewModel.updateInfoForFood(foodId: food.foodId)
+            }
+            navModel.navPath.append(food)
+        } label: {
+            MealHomeViewCell(food: food)
+        }
+        .listRowBackground(Color.clear)
+        .buttonStyle(.plain)
+    }
+    
+    @ViewBuilder
+    private func PickerView() -> some View {
+        Picker("Select View", selection: $currentViewSelection) {
+            ForEach(viewOptions, id: \.self) { option in
+                Text(option)
+            }
+        }
+        .pickerStyle(.segmented)
+        .padding(.horizontal)
+    }
+    
+    @ViewBuilder
+    private func ProfileButton() -> some View {
+        Button {
+            Task.init(priority: .userInitiated) {
+                await viewModel.loadUserReviewsFromServer(userId: authModel.userId)
+            }
+            self.navModel.navPath.append(ShowProfileView())
+        } label: {
+            Circle()
+                .frame(width: MENUBAR_BUTTON_SIZE, height: MENUBAR_BUTTON_SIZE, alignment: .center)
+                .foregroundColor(.white)
+                .overlay(Image(systemName: "person.crop.circle.fill")
+                    .font(.system(size: MENUBAR_BUTTON_SIZE/1.2))
+                         , alignment: .center)
+        }
+        .padding(.horizontal, -5)
+    }
+    
+    @ViewBuilder
+    private func AddFoodButton() -> some View {
+        Button {
+            showingAddFoodCover.toggle()
+        } label: {
+            Circle()
+                .frame(width: MENUBAR_BUTTON_SIZE, height: MENUBAR_BUTTON_SIZE, alignment: .center)
+                .foregroundColor(.white)
+                .overlay(Image(systemName: "plus.circle.fill").font(.system(size: MENUBAR_BUTTON_SIZE/1.2)), alignment: .center)
+        }
+        .buttonStyle(.borderless)
+    }
+    
+    @ViewBuilder
+    private func FilterButton() -> some View {
+        Button {
+            self.showingFilterEditor.toggle()
+        } label: {
+            Circle()
+                .frame(width: MENUBAR_BUTTON_SIZE, height: MENUBAR_BUTTON_SIZE, alignment: .center)
+                .foregroundColor(.white)
+                .overlay(Image(systemName: "line.3.horizontal.decrease.circle.fill").font(.system(size: MENUBAR_BUTTON_SIZE/1.2)), alignment: .center)
+            
+        }
+        .buttonStyle(.borderless)
+    }
+    
+    @ViewBuilder
+    private func FoodsListContent(_ foods: [Food]) -> some View {
+        ForEach(foods) { food in
+            Group {
+                HStack {
+                    Spacer()
+                    FoodCellButton(food: food)
+                    Spacer()
+                }
+            }
+            .listRowBackground(Color.clear)
+            .listRowSeparator(Visibility.hidden)
+        }
+    }
+    
     var body: some View {
         ZStack {
             AppBackground()
@@ -48,36 +140,15 @@ struct HomeView: View {
                                 if searchText.isEmpty { foodFilter.searchQuery = nil }
                             }
                     } else {
+                        PickerView()
+                        
                         if (foods.isEmpty && !searchText.isEmpty) {
                             Text("Nothing found for \(searchText)")
                                 .font(.subheadline)
                                 .padding()
                         }
                         List {
-                            ForEach(foods) { food in
-                                Group {
-                                    HStack {
-                                        Spacer()
-                                        Button {
-                                            Task {
-                                                await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
-                                            }
-                                            Task {
-                                                await viewModel.updateInfoForFood(foodId: food.foodId)
-                                            }
-                                            navModel.navPath.append(food)
-                                        } label: {
-                                            MealHomeViewCell(food: food)
-                                        }
-                                        .listRowBackground(Color.clear)
-                                        .buttonStyle(.plain)
-                                        
-                                        Spacer()
-                                    }
-                                }
-                                .listRowBackground(Color.clear)
-                                .listRowSeparator(Visibility.hidden)
-                            }
+                            FoodsListContent(foods)
                             //Makes sure the empty list is invisible
                             if (foods.isEmpty) {
                                 Spacer()
@@ -86,12 +157,19 @@ struct HomeView: View {
                             }
                         }
                         .searchable(text: $searchText, prompt: Text("Search by food or restaurant"))
-                        .onChange(of: searchText, perform: { newVal in
-                            if newVal.isEmpty {
-                                foodFilter.searchQuery = nil
-                                return
+                        .onChange(of: currentViewSelection) { val in
+                            withAnimation {
+                                foodFilter.trending = (val == "Trending")
                             }
-                            foodFilter.searchQuery = newVal
+                        }
+                        .onChange(of: searchText, perform: { newVal in
+                            withAnimation {
+                                if newVal.isEmpty {
+                                    foodFilter.searchQuery = nil
+                                    return
+                                }
+                                foodFilter.searchQuery = newVal
+                            }
                         })
                         .refreshable {
                             await viewModel.fetchAllFoods()
@@ -136,44 +214,18 @@ struct HomeView: View {
                     .transition(.opacity)
             }
         }
-
+        
         .toolbar {
             ToolbarItemGroup {
-                Button {
-                    Task.init(priority: .userInitiated) {
-                        await viewModel.loadUserReviewsFromServer(userId: authModel.userId)
-                    }
-                    self.navModel.navPath.append(ShowProfileView())
-                } label: {
-                    Circle()
-                        .frame(width: MENUBAR_BUTTON_SIZE, height: MENUBAR_BUTTON_SIZE, alignment: .center)
-                        .foregroundColor(.white)
-                        .overlay(Image(systemName: "person.crop.circle.fill")
-                            .font(.system(size: MENUBAR_BUTTON_SIZE/1.2))
-                                 , alignment: .center)
+                if (viewModel.adminModeEnabled) {
+                    Image(systemName: "person.badge.shield.checkmark")
                 }
-                .padding(.horizontal, -5)
-                //Spacer()
-                Button {
-                    showingAddFoodCover.toggle()
-                } label: {
-                    Circle()
-                        .frame(width: MENUBAR_BUTTON_SIZE, height: MENUBAR_BUTTON_SIZE, alignment: .center)
-                        .foregroundColor(.white)
-                        .overlay(Image(systemName: "plus.circle.fill").font(.system(size: MENUBAR_BUTTON_SIZE/1.2)), alignment: .center)
-                }
-                .buttonStyle(.borderless)
                 
-                Button {
-                    self.showingFilterEditor.toggle()
-                } label: {
-                    Circle()
-                        .frame(width: MENUBAR_BUTTON_SIZE, height: MENUBAR_BUTTON_SIZE, alignment: .center)
-                        .foregroundColor(.white)
-                        .overlay(Image(systemName: "line.3.horizontal.decrease.circle.fill").font(.system(size: MENUBAR_BUTTON_SIZE/1.2)), alignment: .center)
-                    
-                }
-                .buttonStyle(.borderless)
+                ProfileButton()
+
+                AddFoodButton()
+                
+                FilterButton()
             }
         }
     }

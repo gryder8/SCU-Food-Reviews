@@ -98,4 +98,7 @@ extension Color {
     static var lightGray: Color {
         return Color("LightGray")
     }
+    static var material: Color {
+        return Color.white.opacity(0.4)
+    }
 }
