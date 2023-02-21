@@ -1,7 +1,7 @@
 # COEN-174
-Project for COEN 174 Winter 2022
-_Before building or running the code, please note that you need a Mac running Xcode 14 and iOS 16 simulators
-For now, the app has been tested on the iPhone 14 Pro and 14 Pro Max, but it should run fine on any supported Apple platform._
+Project for COEN 174 Winter 2023  
+_Before building or running the code, please note that you need a Mac running Xcode 14 and iOS 16 simulators_  
+_For now, the app has been tested on the iPhone 14 Pro and 14 Pro Max, but it should run fine on any supported Apple platform._  
 
 ## Running the App  
 Clone the front-end repo from: https://github.com/gryder8/COEN-174  
