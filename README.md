@@ -1,4 +1,4 @@
-# COEN-174
+# SCU Food Reviews
 Project for COEN 174 Winter 2023  
 _Before building or running the code, please note that you need a Mac running Xcode 14 and iOS 16 simulators_  
 _For now, the app has been tested on the iPhone 14 Pro and 14 Pro Max, but it should run fine on any supported Apple platform._  
