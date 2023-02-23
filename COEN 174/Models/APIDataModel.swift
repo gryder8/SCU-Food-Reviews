@@ -200,9 +200,9 @@ class APIDataModel: ObservableObject {
                 
                 guard let responseData = responseData else { return }
                 
-                if let responseJSONData = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) {
-                    print("Response JSON data = \n\(responseJSONData)")
-                }
+//                if let responseJSONData = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) {
+//                    print("Response JSON data = \n\(responseJSONData)")
+//                }
                 
                 ///Try decoding data
                 do {
@@ -265,9 +265,9 @@ class APIDataModel: ObservableObject {
                 
                 guard let responseData = responseData else { return }
                 
-                if let responseJSONData = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) {
-                    print("Response JSON data = \n\(responseJSONData)")
-                }
+//                if let responseJSONData = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) {
+//                    print("Response JSON data = \n\(responseJSONData)")
+//                }
                 
                 ///Try decoding data
                 do {

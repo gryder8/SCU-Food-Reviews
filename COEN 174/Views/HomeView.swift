@@ -120,7 +120,6 @@ struct HomeView: View {
                                 } label: {
                                     Label("Delete", systemImage: "trash.fill")
                                 }
-                                .cornerRadius(10)
                             }
                         }
                     Spacer()
