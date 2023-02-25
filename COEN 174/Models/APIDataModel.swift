@@ -25,6 +25,7 @@ class APIDataModel: ObservableObject {
     ///foodId: [Review]
     @Published private(set) var foodReviews: [String : [Review]] = [:]
     @Published private(set) var userReviews: [Review] = []
+    @Published private(set) var foodRec: FoodRec? = nil
     
     var trendingFoods: [Food] {
         return self.foods.filter { food in
@@ -153,6 +154,41 @@ class APIDataModel: ObservableObject {
                 completion(.failure(error))
             }
             isFetchingAllFoods = false
+                
+        }
+    }
+    
+    func getFoodRec(completion: @escaping (Result<FoodRec, Error>) -> ()) async {
+        let urlEndpointString = baseURLString+"getFoodRec"
+        let url: URL = URL(string: urlEndpointString)!
+        
+        do {
+            isFetchingAllFoods = true
+            let (resultData, response) = try await URLSession.shared.data(from: url)
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                guard httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299 else {
+                    print("***Error: Status \(httpResponse.statusCode) from \(url)")
+                    completion(.failure(URLError(.badServerResponse)))
+                    return
+                }
+            }
+            
+            let foodRec: FoodRecResponse = try JSONDecoder().decode(FoodRecResponse.self, from: resultData)
+            print(foodRec)
+            DispatchQueue.main.async {
+                self.foodRec = foodRec.food //UPDATE FOOD!
+                completion(.success(foodRec.food))
+                print("Foods rec is now: \(foodRec.food)")
+            }
+        } catch {
+            if let err = error as? URLError {
+                print("API call failed!\n\(error)")
+                completion(.failure(err))
+            } else {
+                print("Decoding failed!\n\(error)")
+                completion(.failure(error))
+            }
                 
         }
     }

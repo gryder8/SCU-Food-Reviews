@@ -16,8 +16,10 @@ class ViewModel: ObservableObject {
     private let INIT_ANIM_DURATION = 0.5
     
     @Published private(set) var displayData: [Food] = []
+    @Published private(set) var foodRec: Food? = nil
     @Published private(set) var fetchingData: Bool = false
     @Published private(set) var fetchingReviews: Bool = false
+    @Published private(set) var fetchingFoodRec: Bool = false
     @Published private(set) var fetchingUserReviews: Bool = false
     @Published private(set) var userReviews: [Review] = []
     @Published private(set) var reviewsForCurrentFood: [Review] = []
@@ -25,9 +27,31 @@ class ViewModel: ObservableObject {
     @Published private(set) var removingFood: Bool = false
     @Published private(set) var errorMessage: String? = nil
     @Published var adminModeEnabled: Bool = false
-
+    
     
     static private let errorMessagePersistanceDuration = 3.0
+    
+    private func presentPersistentErrorMessage(_ msg: String) {
+        DispatchQueue.main.async { [weak self] in
+            withAnimation(.easeIn) {
+                self?.errorMessage = msg
+            }
+        }
+    }
+    
+    private func presentTempErrorMsg(_ msg: String, duration: Double = errorMessagePersistanceDuration) {
+        DispatchQueue.main.async { [weak self] in
+            withAnimation(.easeIn) {
+                self?.errorMessage = msg
+            }
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration) { [weak self] in
+            withAnimation(.easeOut) {
+                self?.errorMessage = nil
+            }
+        }
+    }
     
     func foodFromID(foodId: String) -> Food? {
         return apiModel.foods.first(where: { food in
@@ -77,10 +101,7 @@ class ViewModel: ObservableObject {
                 }
             case .failure(let error):
                 print("Failed with error: \(error)")
-                DispatchQueue.main.async { [weak self] in
-                    self?.errorMessage = "An error occurred, please try again later and check your connection."
-                }
-                
+                self?.presentPersistentErrorMessage("An error occurred, please try again later and check your connection.")
             }
         })
     }
@@ -93,7 +114,7 @@ class ViewModel: ObservableObject {
         }
         await apiModel.getUserReviews(for: userId, completion: { result in
             switch (result) {
-                case .success(let reviews):
+            case .success(let reviews):
                 print("Found \(reviews.count) reviews for the current user")
                 DispatchQueue.main.async { [weak self] in
                     withAnimation(.easeIn) {
@@ -103,21 +124,13 @@ class ViewModel: ObservableObject {
                 }
             case .failure(let error):
                 print("Getting user reviews failed with error: \(error)")
-                DispatchQueue.main.async { [weak self] in
-                    self?.errorMessage = "An error occurred getting your reviews. Try again later."
-                    withAnimation {
-                        self?.fetchingUserReviews = false
-                    }
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + ViewModel.errorMessagePersistanceDuration) { [weak self] in
-                    self?.errorMessage = nil
-                }
-
+                self.presentTempErrorMsg("An error occurred getting your reviews. Try again later.")
+                
             }
             
         })
     }
-        
+    
     func updateInfoForFood(foodId: String) async {
         await apiModel.updateFood(foodId: foodId) { [weak self] result in
             switch (result) {
@@ -125,13 +138,7 @@ class ViewModel: ObservableObject {
                 print("Succesfully updated food: \(food)")
                 self?.objectWillChange.send()
             case .failure(let error):
-                DispatchQueue.main.async { [weak self] in
-                    self?.errorMessage = "An error occurred updating food info."
-                }
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + ViewModel.errorMessagePersistanceDuration) { [weak self] in
-                    self?.errorMessage = nil
-                }
+                self?.presentTempErrorMsg("An error occurred updating food info.")
                 print("Error updating food: \(error)")
             }
         }
@@ -155,14 +162,7 @@ class ViewModel: ObservableObject {
                 }
             case .failure(let error):
                 print("Error removing food: \(error)")
-                DispatchQueue.main.async { [weak self] in
-                    self?.errorMessage = "Failed to remove food, try again later."
-                    self?.removingFood = false
-                }
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + ViewModel.errorMessagePersistanceDuration) { [weak self] in
-                    self?.errorMessage = nil
-                }
+                self?.presentTempErrorMsg("Failed to remove food, try again later.")
             }
         }
     }
@@ -184,19 +184,12 @@ class ViewModel: ObservableObject {
                     self?.reviewsForCurrentFood.removeAll { review in
                         review.reviewId == reviewId
                     }
-                
-                self?.removingReview = false
-            }
-        case .failure(let error):
-            print("Error removing review: \(error)")
-            DispatchQueue.main.async { [weak self] in
-                self?.errorMessage = "Failed to remove review, try again later."
+                    
                     self?.removingReview = false
                 }
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + ViewModel.errorMessagePersistanceDuration) { [weak self] in
-                    self?.errorMessage = nil
-                }
+            case .failure(let error):
+                print("Error removing review: \(error)")
+                self?.presentTempErrorMsg("Failed to remove review, try again later.")
             }
         }
     }
@@ -218,12 +211,37 @@ class ViewModel: ObservableObject {
                 }
                 self?.configDisplayData()
             case .failure(let error):
-                print("Failed with error: \(error)")
-                DispatchQueue.main.async { [weak self] in
-                    self?.errorMessage = "An error occurred, please try again later and check your connection."
-                }
+                print("Failed to get foods with error: \(error)")
+                self?.presentPersistentErrorMessage("An error occurred, please try again later and check your connection.")
+                
+                
             }
         })
+    }
+    
+    func getFoodRec() async {
+        DispatchQueue.main.async { [weak self] in
+            self?.fetchingFoodRec = true
+        }
+        await apiModel.getFoodRec { [weak self] result in
+            switch result {
+            case .success(let foodRec):
+                print("Got food rec of: \(foodRec)")
+                DispatchQueue.main.async { [weak self] in
+                    guard let foodFromRec = self?.foodFromID(foodId: foodRec.foodId) else {
+                        print("***Could not find corresponding food for reccomendation!")
+                        return
+                    }
+                    withAnimation(.easeIn) {
+                        self?.foodRec = foodFromRec
+                        self?.fetchingFoodRec = false
+                    }
+                }
+            case .failure(let err):
+                print("Failed with error: \(err)")
+                self?.presentTempErrorMsg("Error fetching food rec!", duration: 1.0)
+            }
+        }
     }
     
     
@@ -303,7 +321,7 @@ class ViewModel: ObservableObject {
         
         if filter.glutenFree { result.removeAll(where: { food in
             !(food.tags?.contains("Gluten Free") ?? false)
-            })
+        })
         }
         
         if filter.vegan {

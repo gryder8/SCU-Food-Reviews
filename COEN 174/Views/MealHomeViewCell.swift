@@ -19,6 +19,7 @@ struct MealHomeViewCell: View {
                 .font(.title)
                 .multilineTextAlignment(.leading)
                 .padding(.leading, 0)
+                .foregroundColor(.whiteBlack)
             HStack (spacing: 0){
                 Text(String(format: "(%.1f)", food.rating))
                     .font(.system(size: 18).italic())

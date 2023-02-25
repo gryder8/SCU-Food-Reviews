@@ -101,4 +101,7 @@ extension Color {
     static var material: Color {
         return Color.white.opacity(0.4)
     }
+    static var whiteBlack: Color {
+        return Color("Contrasting")
+    }
 }
