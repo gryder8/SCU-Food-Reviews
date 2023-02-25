@@ -369,7 +369,7 @@ class ViewModel: ObservableObject {
             withAnimation(.easeIn(duration: 1)) {
                 self.displayData = self.dataForDisplay//self.dataForDisplay
             }
-            print("Found \(self.displayData.count) total entries")
+            print("Found \(self.displayData.count) total food entries")
         }
     }
 }

@@ -11,7 +11,8 @@ class UserAuthModel: ObservableObject {
     
     var isAdmin: Bool {
         guard let user = GIDSignIn.sharedInstance.currentUser else { return false }
-        return user.profile?.email == "gryder@scu.edu"
+        guard let userEmail = user.profile?.email else { return false }
+        return adminEmailsList.contains(userEmail)
     }
     
     init(){
@@ -53,6 +54,9 @@ class UserAuthModel: ObservableObject {
     }
     
     func validateEmail(_ email: String) -> Bool {
+        guard email != appStoreReviewOverrideEmail else {
+            return true
+        }
         let comps = email.components(separatedBy: "@")
         return comps.count == 2 && comps[1] == "scu.edu"
     }
@@ -91,7 +95,7 @@ class UserAuthModel: ObservableObject {
             
             let domain = email.components(separatedBy: "@")[1]
             
-            if domain != "scu.edu" {
+            if domain != "scu.edu" && email != appStoreReviewOverrideEmail {
                 DispatchQueue.main.async {
                     self.errorMessage = "You must have an SCU email to use this application."
                     self.isLoggedIn = false

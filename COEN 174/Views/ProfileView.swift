@@ -121,7 +121,10 @@ struct ProfileView: View {
                     //.padding(.leading, -20)
                     .scrollContentBackground(.hidden)
                 }
-                
+                if (vm.userReviews.isEmpty && !vm.fetchingUserReviews) {
+                    Text("You haven't made any reviews yet!")
+                        .font(.subheadline.bold())
+                }
                 Button("Sign Out") {
                     confirmSignOut = true
                 }
