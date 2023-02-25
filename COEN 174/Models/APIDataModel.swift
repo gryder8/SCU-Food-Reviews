@@ -113,6 +113,8 @@ class APIDataModel: ObservableObject {
         
     }
     
+
+    
     func getAllFoods(completion: @escaping (Result<[Food], Error>) -> ()) async {
         let urlEndpointString = baseURLString+"getAllFood"
         let url: URL = URL(string: urlEndpointString)!
@@ -154,39 +156,6 @@ class APIDataModel: ObservableObject {
                 
         }
     }
-    
-//    func getTrendingFoods(completion: @escaping (Result<[Food], Error>) -> ()) async {
-//        let urlEndpointString = baseURLString+"getTrendingFood"
-//        let url: URL = URL(string: urlEndpointString)!
-//
-//        do {
-//            let (resultData, response) = try await URLSession.shared.data(from: url)
-//            if let httpResponse = response as? HTTPURLResponse {
-//                guard httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299 else {
-//                    print("***Error: Status \(httpResponse.statusCode) from \(url)")
-//                    completion(.failure(URLError(.badServerResponse)))
-//                    return
-//                }
-//            }
-//
-//            let trendingFood: FoodsResult = try JSONDecoder().decode(FoodsResult.self, from: resultData)
-//            print(trendingFood)
-//            DispatchQueue.main.async {
-//                self.trendingFoods = trendingFood.foods //UPDATE TRENDING FOODS!
-//                completion(.success(trendingFood.foods))
-//                print("Trending foods now has \(self.foods.count) entries")
-//            }
-//
-//        } catch {
-//            if let err = error as? URLError {
-//                print("API call failed!\n\(error)")
-//                completion(.failure(err))
-//            } else {
-//                print("Decoding failed!\n\(error)")
-//                completion(.failure(error))
-//            }
-//        }
-//    }
     
     
     func getReviewsForFood(with foodID: String, completion: @escaping (Result<[Review], Error>) -> ()) async {
@@ -231,9 +200,9 @@ class APIDataModel: ObservableObject {
                 
                 guard let responseData = responseData else { return }
                 
-                if let responseJSONData = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) {
-                    print("Response JSON data = \n\(responseJSONData)")
-                }
+//                if let responseJSONData = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) {
+//                    print("Response JSON data = \n\(responseJSONData)")
+//                }
                 
                 ///Try decoding data
                 do {
@@ -296,9 +265,9 @@ class APIDataModel: ObservableObject {
                 
                 guard let responseData = responseData else { return }
                 
-                if let responseJSONData = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) {
-                    print("Response JSON data = \n\(responseJSONData)")
-                }
+//                if let responseJSONData = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) {
+//                    print("Response JSON data = \n\(responseJSONData)")
+//                }
                 
                 ///Try decoding data
                 do {
@@ -363,6 +332,68 @@ class APIDataModel: ObservableObject {
                     }
                     
                     completion(.success(responseCode))
+
+                }
+            }.resume()
+            
+        } catch {
+            print(error)
+            completion(.failure(error))
+        }
+    }
+    
+    /*
+     Endpoint: removeFood
+     Type: POST
+     Request: { ‘foodId’: String }
+     Response: {}
+     */
+    func removeFood(foodId: String, completion: @escaping (Result<Int, Error>) -> ()) async {
+        let urlEndpointString = baseURLString+"removeFood"
+        let endpointURL: URL = URL(string: urlEndpointString)!
+        print("Using URL: \(endpointURL) to remove food with id: \(foodId)")
+        var request = URLRequest(url: endpointURL)
+        request.httpMethod = "POST"
+        request.allHTTPHeaderFields = [
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        ]
+        
+        let jsonDict:[String:Any] = [
+            "foodId": foodId
+        ]
+        
+        do {
+            let data = try JSONSerialization.data(withJSONObject: jsonDict)
+                        
+            URLSession.shared.uploadTask(with: request, from: data) { (responseData, response, error) in
+                
+                if let error = error {
+                    print("Error with POST request: \(error)")
+                    completion(.failure(error))
+                    return
+                }
+                
+                if let responseCode = (response as? HTTPURLResponse)?.statusCode {
+                    guard responseCode == 200 else {
+                        print("Invalid response code to remove food with id: \(foodId): Code \(responseCode)")
+                        if responseCode >= 500 {
+                            completion(.failure(URLError(.badServerResponse)))
+                        } else {
+                            completion(.failure(URLError(.badURL)))
+                        }
+                        return
+                    }
+                    
+                    completion(.success(responseCode))
+                    DispatchQueue.main.async {
+                        withAnimation {
+                            self.foods.removeAll(where: {food in
+                                food.foodId == foodId
+                            })
+                        }
+                    }
+                    
                 }
             }.resume()
             

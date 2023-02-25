@@ -76,14 +76,14 @@
 		862E79B829809664004FCF12 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		862E79BA29809948004FCF12 /* MealHomeViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealHomeViewCell.swift; sourceTree = "<group>"; };
 		862E79BC29809A09004FCF12 /* FiveStarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiveStarView.swift; sourceTree = "<group>"; };
-		865D249E2970CD3600C8B2E2 /* COEN 174.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "COEN 174.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		865D249E2970CD3600C8B2E2 /* SCU Food Reviews.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SCU Food Reviews.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		865D24A12970CD3600C8B2E2 /* COEN_174App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COEN_174App.swift; sourceTree = "<group>"; };
 		865D24A32970CD3600C8B2E2 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		865D24A52970CD3800C8B2E2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		865D24A82970CD3800C8B2E2 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		865D24AE2970CD3800C8B2E2 /* COEN 174Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "COEN 174Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		865D24AE2970CD3800C8B2E2 /* SCU Food ReviewsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SCU Food ReviewsTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		865D24B22970CD3800C8B2E2 /* COEN_174Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COEN_174Tests.swift; sourceTree = "<group>"; };
-		865D24B82970CD3800C8B2E2 /* COEN 174UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "COEN 174UITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		865D24B82970CD3800C8B2E2 /* SCU Food ReviewsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SCU Food ReviewsUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		865D24BC2970CD3800C8B2E2 /* COEN_174UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COEN_174UITests.swift; sourceTree = "<group>"; };
 		865D24BE2970CD3800C8B2E2 /* COEN_174UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COEN_174UITestsLaunchTests.swift; sourceTree = "<group>"; };
 		868CCD172980B3C500A1EC21 /* NavigationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationModel.swift; sourceTree = "<group>"; };
@@ -200,9 +200,9 @@
 		865D249F2970CD3600C8B2E2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				865D249E2970CD3600C8B2E2 /* COEN 174.app */,
-				865D24AE2970CD3800C8B2E2 /* COEN 174Tests.xctest */,
-				865D24B82970CD3800C8B2E2 /* COEN 174UITests.xctest */,
+				865D249E2970CD3600C8B2E2 /* SCU Food Reviews.app */,
+				865D24AE2970CD3800C8B2E2 /* SCU Food ReviewsTests.xctest */,
+				865D24B82970CD3800C8B2E2 /* SCU Food ReviewsUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -252,9 +252,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		865D249D2970CD3600C8B2E2 /* COEN 174 */ = {
+		865D249D2970CD3600C8B2E2 /* SCU Food Reviews */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 865D24C22970CD3800C8B2E2 /* Build configuration list for PBXNativeTarget "COEN 174" */;
+			buildConfigurationList = 865D24C22970CD3800C8B2E2 /* Build configuration list for PBXNativeTarget "SCU Food Reviews" */;
 			buildPhases = (
 				865D249A2970CD3600C8B2E2 /* Sources */,
 				865D249B2970CD3600C8B2E2 /* Frameworks */,
@@ -264,19 +264,19 @@
 			);
 			dependencies = (
 			);
-			name = "COEN 174";
+			name = "SCU Food Reviews";
 			packageProductDependencies = (
 				868CCD152980A04B00A1EC21 /* StarRating */,
 				86A36F7129948CF600F8F048 /* GoogleSignIn */,
 				86A36F7329948CF600F8F048 /* GoogleSignInSwift */,
 			);
 			productName = "COEN 174";
-			productReference = 865D249E2970CD3600C8B2E2 /* COEN 174.app */;
+			productReference = 865D249E2970CD3600C8B2E2 /* SCU Food Reviews.app */;
 			productType = "com.apple.product-type.application";
 		};
-		865D24AD2970CD3800C8B2E2 /* COEN 174Tests */ = {
+		865D24AD2970CD3800C8B2E2 /* SCU Food ReviewsTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 865D24C52970CD3800C8B2E2 /* Build configuration list for PBXNativeTarget "COEN 174Tests" */;
+			buildConfigurationList = 865D24C52970CD3800C8B2E2 /* Build configuration list for PBXNativeTarget "SCU Food ReviewsTests" */;
 			buildPhases = (
 				865D24AA2970CD3800C8B2E2 /* Sources */,
 				865D24AB2970CD3800C8B2E2 /* Frameworks */,
@@ -287,17 +287,17 @@
 			dependencies = (
 				865D24B02970CD3800C8B2E2 /* PBXTargetDependency */,
 			);
-			name = "COEN 174Tests";
+			name = "SCU Food ReviewsTests";
 			packageProductDependencies = (
 				861D1890299C732800610586 /* GoogleSignIn */,
 			);
 			productName = "COEN 174Tests";
-			productReference = 865D24AE2970CD3800C8B2E2 /* COEN 174Tests.xctest */;
+			productReference = 865D24AE2970CD3800C8B2E2 /* SCU Food ReviewsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		865D24B72970CD3800C8B2E2 /* COEN 174UITests */ = {
+		865D24B72970CD3800C8B2E2 /* SCU Food ReviewsUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 865D24C82970CD3800C8B2E2 /* Build configuration list for PBXNativeTarget "COEN 174UITests" */;
+			buildConfigurationList = 865D24C82970CD3800C8B2E2 /* Build configuration list for PBXNativeTarget "SCU Food ReviewsUITests" */;
 			buildPhases = (
 				865D24B42970CD3800C8B2E2 /* Sources */,
 				865D24B52970CD3800C8B2E2 /* Frameworks */,
@@ -308,9 +308,9 @@
 			dependencies = (
 				865D24BA2970CD3800C8B2E2 /* PBXTargetDependency */,
 			);
-			name = "COEN 174UITests";
+			name = "SCU Food ReviewsUITests";
 			productName = "COEN 174UITests";
-			productReference = 865D24B82970CD3800C8B2E2 /* COEN 174UITests.xctest */;
+			productReference = 865D24B82970CD3800C8B2E2 /* SCU Food ReviewsUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -336,7 +336,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 865D24992970CD3600C8B2E2 /* Build configuration list for PBXProject "COEN 174" */;
+			buildConfigurationList = 865D24992970CD3600C8B2E2 /* Build configuration list for PBXProject "SCU Food Reviews" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -353,9 +353,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				865D249D2970CD3600C8B2E2 /* COEN 174 */,
-				865D24AD2970CD3800C8B2E2 /* COEN 174Tests */,
-				865D24B72970CD3800C8B2E2 /* COEN 174UITests */,
+				865D249D2970CD3600C8B2E2 /* SCU Food Reviews */,
+				865D24AD2970CD3800C8B2E2 /* SCU Food ReviewsTests */,
+				865D24B72970CD3800C8B2E2 /* SCU Food ReviewsUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -442,12 +442,12 @@
 /* Begin PBXTargetDependency section */
 		865D24B02970CD3800C8B2E2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 865D249D2970CD3600C8B2E2 /* COEN 174 */;
+			target = 865D249D2970CD3600C8B2E2 /* SCU Food Reviews */;
 			targetProxy = 865D24AF2970CD3800C8B2E2 /* PBXContainerItemProxy */;
 		};
 		865D24BA2970CD3800C8B2E2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 865D249D2970CD3600C8B2E2 /* COEN 174 */;
+			target = 865D249D2970CD3600C8B2E2 /* SCU Food Reviews */;
 			targetProxy = 865D24B92970CD3800C8B2E2 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -579,6 +579,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "COEN-174-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Food Reviews";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
@@ -588,7 +590,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "Gavin.COEN-174";
+				PRODUCT_BUNDLE_IDENTIFIER = "Gavin.SCU.Food-Reviews";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -608,6 +610,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "COEN-174-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Food Reviews";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
@@ -617,7 +621,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "Gavin.COEN-174";
+				PRODUCT_BUNDLE_IDENTIFIER = "Gavin.SCU.Food-Reviews";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -641,7 +645,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/COEN 174.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/COEN 174";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SCU Food Reviews.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SCU Food Reviews";
 			};
 			name = Debug;
 		};
@@ -661,7 +665,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/COEN 174.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/COEN 174";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SCU Food Reviews.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SCU Food Reviews";
 			};
 			name = Release;
 		};
@@ -704,7 +708,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		865D24992970CD3600C8B2E2 /* Build configuration list for PBXProject "COEN 174" */ = {
+		865D24992970CD3600C8B2E2 /* Build configuration list for PBXProject "SCU Food Reviews" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				865D24C02970CD3800C8B2E2 /* Debug */,
@@ -713,7 +717,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		865D24C22970CD3800C8B2E2 /* Build configuration list for PBXNativeTarget "COEN 174" */ = {
+		865D24C22970CD3800C8B2E2 /* Build configuration list for PBXNativeTarget "SCU Food Reviews" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				865D24C32970CD3800C8B2E2 /* Debug */,
@@ -722,7 +726,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		865D24C52970CD3800C8B2E2 /* Build configuration list for PBXNativeTarget "COEN 174Tests" */ = {
+		865D24C52970CD3800C8B2E2 /* Build configuration list for PBXNativeTarget "SCU Food ReviewsTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				865D24C62970CD3800C8B2E2 /* Debug */,
@@ -731,7 +735,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		865D24C82970CD3800C8B2E2 /* Build configuration list for PBXNativeTarget "COEN 174UITests" */ = {
+		865D24C82970CD3800C8B2E2 /* Build configuration list for PBXNativeTarget "SCU Food ReviewsUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				865D24C92970CD3800C8B2E2 /* Debug */,

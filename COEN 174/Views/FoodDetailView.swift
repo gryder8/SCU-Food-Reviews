@@ -73,6 +73,18 @@ struct FoodDetailView: View {
                                 .environmentObject(viewModel)
                                 .listRowBackground(Color.clear)
                                 .listRowSeparator(.hidden)
+                                .swipeActions {
+                                    if (viewModel.adminModeEnabled) {
+                                        Button(role: .destructive) {
+                                            print("Delete review selected!")
+                                            Task {
+                                                await viewModel.removeUserReview(reviewId: review.reviewId)
+                                            }
+                                        } label: {
+                                            Label("Delete", systemImage: "trash.fill")
+                                        }
+                                    }
+                                }
                         }
                         .refreshable {
                             await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)

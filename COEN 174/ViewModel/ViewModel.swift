@@ -22,9 +22,10 @@ class ViewModel: ObservableObject {
     @Published private(set) var userReviews: [Review] = []
     @Published private(set) var reviewsForCurrentFood: [Review] = []
     @Published private(set) var removingReview: Bool = false
+    @Published private(set) var removingFood: Bool = false
+    @Published private(set) var errorMessage: String? = nil
     @Published var adminModeEnabled: Bool = false
-    
-    @Published var errorMessage: String? = nil
+
     
     static private let errorMessagePersistanceDuration = 3.0
     
@@ -136,7 +137,36 @@ class ViewModel: ObservableObject {
         }
     }
     
-    //TODO: Call
+    func removeFood(food: Food) async {
+        DispatchQueue.main.async {
+            self.removingFood = true
+        }
+        await apiModel.removeFood(foodId: food.foodId) { [weak self] result in
+            switch (result) {
+            case .success(let code):
+                print("Success with code: \(code)")
+                DispatchQueue.main.async { [weak self] in
+                    withAnimation {
+                        self?.displayData.removeAll(where: { foodItem in //remove from local storage
+                            food.foodId == foodItem.foodId
+                        })
+                        self?.removingFood = false
+                    }
+                }
+            case .failure(let error):
+                print("Error removing food: \(error)")
+                DispatchQueue.main.async { [weak self] in
+                    self?.errorMessage = "Failed to remove food, try again later."
+                    self?.removingFood = false
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + ViewModel.errorMessagePersistanceDuration) { [weak self] in
+                    self?.errorMessage = nil
+                }
+            }
+        }
+    }
+    
     func removeUserReview(reviewId: String) async {
         DispatchQueue.main.async {
             self.removingReview = true
@@ -149,12 +179,18 @@ class ViewModel: ObservableObject {
                     self?.userReviews.removeAll(where: { review in //remove from local storage
                         review.reviewId == reviewId
                     })
-                    self?.removingReview = false
-                }
-            case .failure(let error):
-                print("Error removing review: \(error)")
-                DispatchQueue.main.async { [weak self] in
-                    self?.errorMessage = "Failed to remove review, try again later."
+                    
+                    
+                    self?.reviewsForCurrentFood.removeAll { review in
+                        review.reviewId == reviewId
+                    }
+                
+                self?.removingReview = false
+            }
+        case .failure(let error):
+            print("Error removing review: \(error)")
+            DispatchQueue.main.async { [weak self] in
+                self?.errorMessage = "Failed to remove review, try again later."
                     self?.removingReview = false
                 }
                 
@@ -294,11 +330,25 @@ class ViewModel: ObservableObject {
             })
         }
         
+        if let threshold = filter.maxNumReviews {
+            result.removeAll { food in
+                food.totalReviews > threshold
+            }
+        }
+        
+        if let threshold = filter.maxRating {
+            result.removeAll { food in
+                food.rating > threshold
+            }
+        }
+        
         if let search = filter.searchQuery {
             result.removeAll(where: { food in
                 !food.name.localizedCaseInsensitiveContains(search) && !(food.restaurants?.containsSubstring(search) ?? false)
             })
         }
+        
+        print("Displaying \(result.count) items")
         
         return result.sorted(by: {f1, f2 in
             f1.rating > f2.rating
@@ -319,7 +369,7 @@ class ViewModel: ObservableObject {
             withAnimation(.easeIn(duration: 1)) {
                 self.displayData = self.dataForDisplay//self.dataForDisplay
             }
-            print("Found \(self.displayData.count) entries suitable for display")
+            print("Found \(self.displayData.count) total food entries")
         }
     }
 }

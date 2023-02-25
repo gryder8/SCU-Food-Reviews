@@ -14,5 +14,7 @@ struct FoodFilter: Equatable {
     var trending: Bool = false
     var minRating: Double?
     var minNumReviews: Int?
+    var maxNumReviews: Int?
+    var maxRating: Double?
     var searchQuery: String?
 }
