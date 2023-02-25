@@ -162,7 +162,7 @@ struct HomeView: View {
                                     FoodCellButton(food: food)
                                         .padding(.vertical, 5)
                                 } else {
-                                    Text("No Food Rec :(")
+                                    Text("No Recommendation 😕")
                                 }
                             }
                         } label: {

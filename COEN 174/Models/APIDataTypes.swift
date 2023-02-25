@@ -107,15 +107,7 @@ struct FoodRecResponse: Codable {
 
 // MARK: - FoodRec
 ///Subset of `Food`, converted into a food by calling the view model function to find the food corrsponding to a given foodId
+///As such, we only care about getting the server's ID of the food
 struct FoodRec: Codable {
-    let totalReviews: Int
-    let dateCreated: String
-    let rating: Double
-    let name, foodID, trending: String
-
-    enum CodingKeys: String, CodingKey {
-        case totalReviews, dateCreated, rating, name
-        case foodID = "foodId"
-        case trending
-    }
+    let foodId: String
 }
