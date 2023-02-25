@@ -153,10 +153,13 @@ struct HomeView: View {
                                 if searchText.isEmpty { foodFilter.searchQuery = nil }
                             }
                     } else {
+                        //MARK: - Food Rec Disclosure Group
                         DisclosureGroup(isExpanded: $showingFoodRec) {
                             if viewModel.fetchingFoodRec {
                                 Text("Loading...")
                                     .foregroundColor(.material)
+                                    .font(.title3.italic())
+                                    .padding(.vertical, 5)
                             } else {
                                 if let food = viewModel.foodRec {
                                     FoodCellButton(food: food)
