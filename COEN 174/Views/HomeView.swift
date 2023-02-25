@@ -28,6 +28,7 @@ struct HomeView: View {
     
     private let viewOptions = ["All Food", "Trending"]
     @State private var currentViewSelection = "All Food"
+    @State private var showingFoodRec = false
         
     
     @ViewBuilder
@@ -152,6 +153,36 @@ struct HomeView: View {
                                 if searchText.isEmpty { foodFilter.searchQuery = nil }
                             }
                     } else {
+                        DisclosureGroup(isExpanded: $showingFoodRec) {
+                            if viewModel.fetchingFoodRec {
+                                Text("Loading...")
+                                    .foregroundColor(.material)
+                            } else {
+                                if let food = viewModel.foodRec {
+                                    FoodCellButton(food: food)
+                                        .padding(.vertical, 5)
+                                } else {
+                                    Text("No Food Rec :(")
+                                }
+                            }
+                        } label: {
+                            Image(systemName: "star.fill")
+                            Text("Today's Recommended Food")
+                            Image(systemName: "chevron.right")
+                                .rotationEffect(Angle(degrees: showingFoodRec ? 90 : 0))
+                        }
+                        .onChange(of: showingFoodRec) { newVal in
+                            guard newVal == true, !viewModel.fetchingFoodRec, viewModel.foodRec == nil else { return }
+                            Task {
+                                await viewModel.getFoodRec()
+                            }
+                            
+                        }
+                        .buttonStyle(.plain)
+                        .tint(Color.clear) //hides default disclosure arrow
+                        .foregroundColor(.material)
+                        .padding(.horizontal)
+                        
                         PickerView()
                         
                         if (foods.isEmpty && !searchText.isEmpty) {
@@ -209,6 +240,7 @@ struct HomeView: View {
                 }
                 .onAppear {
                     viewModel.initialize()
+                    showingFoodRec = false
                 }
                 .fullScreenCover(isPresented: $showingAddFoodCover) {
                     SubmitFoodView()

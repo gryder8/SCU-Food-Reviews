@@ -16,8 +16,10 @@ class ViewModel: ObservableObject {
     private let INIT_ANIM_DURATION = 0.5
     
     @Published private(set) var displayData: [Food] = []
+    @Published private(set) var foodRec: Food? = nil
     @Published private(set) var fetchingData: Bool = false
     @Published private(set) var fetchingReviews: Bool = false
+    @Published private(set) var fetchingFoodRec: Bool = false
     @Published private(set) var fetchingUserReviews: Bool = false
     @Published private(set) var userReviews: [Review] = []
     @Published private(set) var reviewsForCurrentFood: [Review] = []
@@ -218,12 +220,44 @@ class ViewModel: ObservableObject {
                 }
                 self?.configDisplayData()
             case .failure(let error):
-                print("Failed with error: \(error)")
+                print("Failed to get foods with error: \(error)")
                 DispatchQueue.main.async { [weak self] in
                     self?.errorMessage = "An error occurred, please try again later and check your connection."
                 }
+                
+
             }
         })
+    }
+    
+    func getFoodRec() async {
+        DispatchQueue.main.async { [weak self] in
+            self?.fetchingFoodRec = true
+        }
+        await apiModel.getFoodRec { [weak self] result in
+            switch result {
+            case .success(let foodRec):
+                print("Got food rec of: \(foodRec)")
+                DispatchQueue.main.async { [weak self] in
+                    guard let foodFromRec = self?.foodFromID(foodId: foodRec.foodID) else {
+                        print("Could not find corresponding food for reccomendation!")
+                        return
+                    }
+                    self?.foodRec = foodFromRec
+                    self?.fetchingFoodRec = false
+                }
+            case .failure(let err):
+                print("Failed with error: \(err)")
+                DispatchQueue.main.async { [weak self] in
+                    self?.fetchingFoodRec = false
+                    self?.errorMessage = "Error fetching food rec!"
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + ViewModel.errorMessagePersistanceDuration) { [weak self] in
+                    self?.errorMessage = nil
+                }
+            }
+        }
     }
     
     
