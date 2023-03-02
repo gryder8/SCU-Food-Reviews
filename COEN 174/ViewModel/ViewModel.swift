@@ -31,6 +31,10 @@ class ViewModel: ObservableObject {
     
     static private let errorMessagePersistanceDuration = 3.0
     
+    func testErrorMessage() {
+        presentTempErrorMsg("Testing", duration: 10.0)
+    }
+    
     private func presentPersistentErrorMessage(_ msg: String) {
         DispatchQueue.main.async { [weak self] in
             withAnimation(.easeIn) {
