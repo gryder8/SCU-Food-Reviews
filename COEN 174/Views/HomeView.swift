@@ -137,7 +137,7 @@ struct HomeView: View {
             if (!viewModel.fetchingData) {
                 VStack {
                     let foods = viewModel.filteredResults(self.foodFilter)
-                    if let error = viewModel.errorMessage {
+                    if let error = viewModel.errorMessage { //make sure this view is on top of the hierarchy to avoid removing the stack
                         Text(error)
                             .font(.system(size: 18).bold())
                             .foregroundColor(.red)
@@ -230,12 +230,7 @@ struct HomeView: View {
                                 .environmentObject(viewModel)
                                 .environmentObject(authModel)
                         }
-                        .navigationDestination(for: ShowProfileView.self) { _ in
-                            ProfileView()
-                                .environmentObject(navModel)
-                                .environmentObject(viewModel)
-                                .environmentObject(authModel)
-                        }
+                        
                         .listStyle(.inset)
                         .padding()
                         
@@ -260,6 +255,12 @@ struct HomeView: View {
                     .navigationTitle("Today's Food")
                     .transition(.opacity)
             }
+        }
+        .navigationDestination(for: ShowProfileView.self) { _ in
+            ProfileView()
+                .environmentObject(navModel)
+                .environmentObject(viewModel)
+                .environmentObject(authModel)
         }
         
         .toolbar {
