@@ -65,16 +65,18 @@ struct ProfileView: View {
         
         Button(role: .destructive) {
             print("Delete review selected")
+            
             Task {
                 //NOTE: Upon success of this, the review is removed locally to eliminate the need for another API call
                 await vm.removeUserReview(reviewId: review.reviewId)
-            }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) { //give the server some time to update
-                Task {
-                    await vm.updateInfoForFood(foodId: review.foodId)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) { //give the server some time to update
+                    Task {
+                        await vm.updateInfoForFood(foodId: review.foodId)
+                    }
                 }
             }
+            
+            
         } label: {
             Label("Delete", systemImage: "trash.fill")
         }
@@ -86,8 +88,8 @@ struct ProfileView: View {
             VStack {
                 
                 
-                if (vm.fetchingUserReviews || vm.removingReview) {
-                    LoadingView(text: vm.removingReview ? "Updating" : "Loading\nReviews")
+                if (vm.fetchingUserReviews) {
+                    LoadingView(text: "Loading\nReviews")
                         .padding()
                 } else if (!vm.userReviews.isEmpty) {
                     if authModel.isAdmin {

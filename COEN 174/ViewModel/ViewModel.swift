@@ -172,23 +172,22 @@ class ViewModel: ObservableObject {
     }
     
     func removeUserReview(reviewId: String) async {
-        DispatchQueue.main.async {
-            self.removingReview = true
+        DispatchQueue.main.async { [weak self] in
+            self?.removingReview = true
+            self?.userReviews.removeAll(where: { review in //remove from local storage
+                review.reviewId == reviewId
+            })
+            
+            
+            self?.reviewsForCurrentFood.removeAll { review in
+                review.reviewId == reviewId
+            }
         }
         await apiModel.removeReview(reviewId: reviewId) { [weak self] result in
             switch (result) {
             case .success(let code):
                 print("Success with code: \(code)")
                 DispatchQueue.main.async { [weak self] in
-                    self?.userReviews.removeAll(where: { review in //remove from local storage
-                        review.reviewId == reviewId
-                    })
-                    
-                    
-                    self?.reviewsForCurrentFood.removeAll { review in
-                        review.reviewId == reviewId
-                    }
-                    
                     self?.removingReview = false
                 }
             case .failure(let error):
