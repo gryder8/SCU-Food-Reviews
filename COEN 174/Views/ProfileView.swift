@@ -69,7 +69,7 @@ struct ProfileView: View {
             Task {
                 //NOTE: Upon success of this, the review is removed locally to eliminate the need for another API call
                 await vm.removeUserReview(reviewId: review.reviewId)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) { //give the server some time to update
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) { //give the server some time to update
                     Task {
                         await vm.updateInfoForFood(foodId: review.foodId)
                     }
