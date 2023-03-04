@@ -129,8 +129,8 @@ struct ProfileView: View {
                             }
                         }
                         .listStyle(.inset)
-                    //.padding(.leading, -20)
                         .scrollContentBackground(.hidden)
+                        .padding(.horizontal, 5)
                     
                     
                     

@@ -64,7 +64,7 @@ class APIDataModel: ObservableObject {
         let url: URL = URL(string: urlEndpointString)!
         
         print("Using URL: \(url) with foodID: \(foodId)")
-        var request = URLRequest(url: url, cachePolicy: .reloadRevalidatingCacheData)
+        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData) //ignore the caches, force us to get the most recent data from the server
         request.httpMethod = "POST"
         
         request.allHTTPHeaderFields = [
@@ -123,7 +123,7 @@ class APIDataModel: ObservableObject {
     
 
     
-    func getAllFoods(completion: @escaping (Result<[Food], Error>) -> ()) async {
+    func getAllFoods(forceRefresh: Bool = false, completion: @escaping (Result<[Food], Error>) -> ()) async {
         let urlEndpointString = baseURLString+"getAllFood"
         let url: URL = URL(string: urlEndpointString)!
         
