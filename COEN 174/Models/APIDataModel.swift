@@ -24,7 +24,7 @@ class APIDataModel: ObservableObject {
     
     ///foodId: [Review]
     @Published private(set) var foodReviews: [String : [Review]] = [:]
-    @Published private(set) var userReviews: [Review] = []
+    @Published private(set) var userReviews: [Review]? = nil
     @Published private(set) var foodRec: FoodRec? = nil
     
     var trendingFoods: [Food] {

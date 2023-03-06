@@ -126,11 +126,22 @@ class ViewModel: ObservableObject {
         })
     }
     
-    func loadUserReviewsFromServer(userId: String) async {
+    func loadUserReviewsFromServer(userId: String, refreshing: Bool = false) async {
         DispatchQueue.main.async {
             withAnimation {
                 self.fetchingUserReviews = true
             }
+        }
+        
+        if let reviews = apiModel.userReviews, !refreshing, !reviews.isEmpty {
+            print("Found \(reviews.count) reviews in cache for the current user")
+            DispatchQueue.main.async { [weak self] in
+                withAnimation(.easeIn) {
+                    self?.userReviews = reviews
+                    self?.fetchingUserReviews = false
+                }
+            }
+            return
         }
         await apiModel.getUserReviews(for: userId, completion: { result in
             switch (result) {
