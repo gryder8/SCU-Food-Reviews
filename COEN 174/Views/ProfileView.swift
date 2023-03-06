@@ -51,6 +51,9 @@ struct ProfileView: View {
                     .listRowSeparator(.hidden)
             }
         }
+        .refreshable {
+            await vm.loadUserReviewsFromServer(userId: authModel.userId, refreshing: true)
+        }
     }
     
     @ViewBuilder
@@ -69,7 +72,7 @@ struct ProfileView: View {
             Task {
                 //NOTE: Upon success of this, the review is removed locally to eliminate the need for another API call
                 await vm.removeUserReview(reviewId: review.reviewId)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) { //give the server some time to update
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) { //give the server some time to update
                     Task {
                         await vm.updateInfoForFood(foodId: review.foodId)
                     }
@@ -92,13 +95,6 @@ struct ProfileView: View {
                     LoadingView(text: "Loading\nReviews")
                         .padding()
                 } else if (!vm.userReviews.isEmpty) {
-                    if authModel.isAdmin {
-                        Toggle("Admin Mode: \(vm.adminModeEnabled ? "On" : "Off")",isOn: $vm.adminModeEnabled)
-                            .buttonStyle(.borderedProminent)
-                            .toggleStyle(.button)
-                            .foregroundColor(.black)
-                            .tint(.blue)
-                    }
                     Text("Your Reviews")
                         .font(.title.bold())
                         .padding(.bottom, -5)
@@ -129,8 +125,8 @@ struct ProfileView: View {
                             }
                         }
                         .listStyle(.inset)
-                    //.padding(.leading, -20)
                         .scrollContentBackground(.hidden)
+                        .padding(.horizontal, 5)
                     
                     
                     
@@ -140,26 +136,21 @@ struct ProfileView: View {
                             .font(.subheadline.bold())
                     }
                     Spacer()
+                    if authModel.userIsAdmin {
+                        Toggle("Admin Mode: \(vm.adminModeEnabled ? "On" : "Off")",isOn: $vm.adminModeEnabled)
+                            .buttonStyle(.borderedProminent)
+                            .toggleStyle(.button)
+                            .foregroundColor(.black)
+                            .tint(.blue)
+                    }
                     Button("Sign Out") {
+                        print("User tapped sign out.")
                         confirmSignOut = true
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(.red)
-                        .padding()
-                        .alert(isPresented: $confirmSignOut) {
-                            Alert(
-                                title: Text("Are you sure you want to sign out?"),
-                                message: Text("You'll be returned to the login screen."),
-                                primaryButton: .destructive(Text("Sign Out")) {
-                                    print("User selected sign out")
-                                    authModel.signOut()
-                                    withAnimation(.linear) {
-                                        navModel.popToRoot()
-                                    }
-                                },
-                                secondaryButton: .cancel()
-                            )
-                        }
+                    .padding()
+
                 }
             }
             .navigationTitle("Profile")
@@ -172,6 +163,20 @@ struct ProfileView: View {
                 Alert(
                     title: Text("Error"),
                     message: Text(capturedErrorMsg)
+                )
+            }
+            .alert(isPresented: $confirmSignOut) {
+                Alert(
+                    title: Text("Are you sure you want to sign out?"),
+                    message: Text("You'll be returned to the login screen."),
+                    primaryButton: .destructive(Text("Sign Out")) {
+                        print("User selected sign out")
+                        authModel.signOut()
+                        withAnimation(.linear) {
+                            navModel.popToRoot()
+                        }
+                    },
+                    secondaryButton: .cancel()
                 )
             }
         }

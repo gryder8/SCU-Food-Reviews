@@ -9,7 +9,7 @@ class UserAuthModel: ObservableObject {
     @Published private(set) var errorMessage: String = ""
     @Published private(set) var userId: String = ""
     
-    var isAdmin: Bool {
+    var userIsAdmin: Bool {
         guard let user = GIDSignIn.sharedInstance.currentUser else { return false }
         guard let userEmail = user.profile?.email else { return false }
         return adminEmailsList.contains(userEmail)

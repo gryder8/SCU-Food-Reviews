@@ -24,12 +24,37 @@ class APIDataModel: ObservableObject {
     
     ///foodId: [Review]
     @Published private(set) var foodReviews: [String : [Review]] = [:]
-    @Published private(set) var userReviews: [Review] = []
+    @Published private(set) var userReviews: [Review]? = nil
     @Published private(set) var foodRec: FoodRec? = nil
     
     var trendingFoods: [Food] {
         return self.foods.filter { food in
             food.isTrendingFood
+        }
+    }
+    
+    private func handleResponse<ResultType>(_ error: Error?, _ response: URLResponse?, _ completion: (Result<ResultType, Error>) -> (), logAction: @autoclosure () -> (), finalActions: (() -> Void)? = nil) {
+        if let error {
+            print("Error with POST request: \(error)")
+            completion(.failure(error))
+            return
+        }
+        
+        if let responseCode = (response as? HTTPURLResponse)?.statusCode {
+            guard responseCode == 200 else {
+                logAction()
+                print("***Error Code: \(responseCode)")
+                if responseCode >= 500 {
+                    completion(.failure(URLError(.badServerResponse)))
+                } else {
+                    completion(.failure(URLError(.badURL)))
+                }
+                return
+            }
+        }
+        
+        if let finalActions {
+            finalActions()
         }
     }
     
@@ -39,7 +64,7 @@ class APIDataModel: ObservableObject {
         let url: URL = URL(string: urlEndpointString)!
         
         print("Using URL: \(url) with foodID: \(foodId)")
-        var request = URLRequest(url: url, cachePolicy: .reloadRevalidatingCacheData)
+        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData) //ignore the caches, force us to get the most recent data from the server
         request.httpMethod = "POST"
         
         request.allHTTPHeaderFields = [
@@ -55,28 +80,10 @@ class APIDataModel: ObservableObject {
             let data = try JSONSerialization.data(withJSONObject: jsonDict)
                         
             URLSession.shared.uploadTask(with: request, from: data) { (responseData, response, error) in
-                //let result: Result<[Review], Error>
                 
-                if let error = error {
-                    print("Error with POST request: \(error)")
-                    completion(.failure(error))
-                    return
-                }
+                self.handleResponse(error, response, completion, logAction: print("Invalid response code for updating food with id: \(foodId) using URL: \(url)"))
                 
-                if let responseCode = (response as? HTTPURLResponse)?.statusCode {
-                    guard responseCode == 200 else {
-                        print("Invalid response code for updating food: \(responseCode) with id: \(foodId)")
-                        print("Using url: \(url)")
-                        if responseCode >= 500 {
-                            completion(.failure(URLError(.badServerResponse)))
-                        } else {
-                            completion(.failure(URLError(.badURL)))
-                        }
-                        return
-                    }
-                }
-                
-                guard let responseData = responseData else { return }
+                guard let responseData else { return }
                 
                 if let responseJSONData = try? JSONSerialization.jsonObject(with: responseData, options: .allowFragments) {
                     print("Response JSON data for updating food = \n\(responseJSONData)")
@@ -116,23 +123,14 @@ class APIDataModel: ObservableObject {
     
 
     
-    func getAllFoods(completion: @escaping (Result<[Food], Error>) -> ()) async {
+    func getAllFoods(forceRefresh: Bool = false, completion: @escaping (Result<[Food], Error>) -> ()) async {
         let urlEndpointString = baseURLString+"getAllFood"
         let url: URL = URL(string: urlEndpointString)!
         
         do {
             isFetchingAllFoods = true
             let (resultData, response) = try await URLSession.shared.data(from: url)
-            
-            if let httpResponse = response as? HTTPURLResponse {
-                guard httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299 else {
-                    print("***Error: Status \(httpResponse.statusCode) from \(url)")
-                    
-                    isFetchingAllFoods = false
-                    completion(.failure(URLError(.badServerResponse)))
-                    return
-                }
-            }
+            self.handleResponse(nil, response, completion, logAction: print("***Error: Bad status code from \(url)"))
             
             let allFood: FoodsResult = try JSONDecoder().decode(FoodsResult.self, from: resultData)
             print(allFood)
@@ -166,13 +164,7 @@ class APIDataModel: ObservableObject {
             isFetchingAllFoods = true
             let (resultData, response) = try await URLSession.shared.data(from: url)
             
-            if let httpResponse = response as? HTTPURLResponse {
-                guard httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299 else {
-                    print("***Error: Status \(httpResponse.statusCode) from \(url)")
-                    completion(.failure(URLError(.badServerResponse)))
-                    return
-                }
-            }
+            self.handleResponse(nil, response, completion, logAction: print("***Error: Bad status code from \(url)"))
             
             let foodRec: FoodRecResponse = try JSONDecoder().decode(FoodRecResponse.self, from: resultData)
             print(foodRec)
@@ -192,6 +184,8 @@ class APIDataModel: ObservableObject {
                 
         }
     }
+    
+
     
     
     func getReviewsForFood(with foodID: String, completion: @escaping (Result<[Review], Error>) -> ()) async {
@@ -214,25 +208,7 @@ class APIDataModel: ObservableObject {
             let data = try JSONSerialization.data(withJSONObject: jsonDict)
                         
             URLSession.shared.uploadTask(with: request, from: data) { (responseData, response, error) in
-                //let result: Result<[Review], Error>
-                
-                if let error = error {
-                    print("Error with POST request: \(error)")
-                    completion(.failure(error))
-                    return
-                }
-                
-                if let responseCode = (response as? HTTPURLResponse)?.statusCode {
-                    guard responseCode == 200 else {
-                        print("Invalid response code for get reviews for food: \(responseCode) with id: \(foodID)")
-                        if responseCode >= 500 {
-                            completion(.failure(URLError(.badServerResponse)))
-                        } else {
-                            completion(.failure(URLError(.badURL)))
-                        }
-                        return
-                    }
-                }
+                self.handleResponse(error, response, completion, logAction: print("Invalid response code for get reviews for food with id: \(foodID)"))
                 
                 guard let responseData = responseData else { return }
                 
@@ -281,23 +257,7 @@ class APIDataModel: ObservableObject {
                         
             URLSession.shared.uploadTask(with: request, from: data) { (responseData, response, error) in
                 
-                if let error = error {
-                    print("Error with POST request: \(error)")
-                    completion(.failure(error))
-                    return
-                }
-                
-                if let responseCode = (response as? HTTPURLResponse)?.statusCode {
-                    guard responseCode == 200 else {
-                        print("Invalid response code for get reviews for user: \(responseCode) with id: \(userId)")
-                        if responseCode >= 500 {
-                            completion(.failure(URLError(.badServerResponse)))
-                        } else {
-                            completion(.failure(URLError(.badURL)))
-                        }
-                        return
-                    }
-                }
+                self.handleResponse(error, response, completion, logAction: print("Invalid response code for get reviews for user with id: \(userId)"))
                 
                 guard let responseData = responseData else { return }
                 
@@ -350,25 +310,8 @@ class APIDataModel: ObservableObject {
                         
             URLSession.shared.uploadTask(with: request, from: data) { (responseData, response, error) in
                 
-                if let error = error {
-                    print("Error with POST request: \(error)")
-                    completion(.failure(error))
-                    return
-                }
-                
-                if let responseCode = (response as? HTTPURLResponse)?.statusCode {
-                    guard responseCode == 200 else {
-                        print("Invalid response code to remove review with id: \(reviewId): Code \(responseCode)")
-                        if responseCode >= 500 {
-                            completion(.failure(URLError(.badServerResponse)))
-                        } else {
-                            completion(.failure(URLError(.badURL)))
-                        }
-                        return
-                    }
-                    
-                    completion(.success(responseCode))
-
+                self.handleResponse(error, response, completion, logAction: print("Invalid response code to remove review with id: \(reviewId)")) {
+                    completion(.success(200))
                 }
             }.resume()
             
@@ -404,24 +347,8 @@ class APIDataModel: ObservableObject {
                         
             URLSession.shared.uploadTask(with: request, from: data) { (responseData, response, error) in
                 
-                if let error = error {
-                    print("Error with POST request: \(error)")
-                    completion(.failure(error))
-                    return
-                }
-                
-                if let responseCode = (response as? HTTPURLResponse)?.statusCode {
-                    guard responseCode == 200 else {
-                        print("Invalid response code to remove food with id: \(foodId): Code \(responseCode)")
-                        if responseCode >= 500 {
-                            completion(.failure(URLError(.badServerResponse)))
-                        } else {
-                            completion(.failure(URLError(.badURL)))
-                        }
-                        return
-                    }
-                    
-                    completion(.success(responseCode))
+                self.handleResponse(error, response, completion, logAction: print("Invalid response code to remove food with id: \(foodId)")) {
+                    completion(.success(200))
                     DispatchQueue.main.async {
                         withAnimation {
                             self.foods.removeAll(where: {food in
@@ -429,7 +356,6 @@ class APIDataModel: ObservableObject {
                             })
                         }
                     }
-                    
                 }
             }.resume()
             

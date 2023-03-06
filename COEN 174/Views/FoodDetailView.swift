@@ -13,6 +13,8 @@ struct NewReview: Equatable, Hashable {}
 struct FoodDetailView: View {
     
     @State var food: Food
+    @State private var showsErrorAlert: Bool = false
+    @State private var capturedErrorMsg: String = ""
     @EnvironmentObject private var navModel: NavigationModel
     @EnvironmentObject private var viewModel: ViewModel
     @EnvironmentObject private var authModel: UserAuthModel
@@ -43,12 +45,12 @@ struct FoodDetailView: View {
                     
                     
                     Text(food.totalReviews != 1 ? "\(food.totalReviews) Reviews" : "\(food.totalReviews) Review")
-                    if viewModel.errorMessage != nil {
-                        Text(viewModel.errorMessage!)
-                            .foregroundColor(.red)
-                            .multilineTextAlignment(.leading)
-                            .font(.caption.italic())
-                    }
+//                    if let msg = viewModel.errorMessage {
+//                        Text(msg)
+//                            .foregroundColor(.red)
+//                            .multilineTextAlignment(.leading)
+//                            .font(.caption.italic())
+//                    }
                     Text("Reviews")
                         .font(.title)
                         .padding(.top)
@@ -60,14 +62,7 @@ struct FoodDetailView: View {
                             Spacer()
                         }
                         .padding(.top)
-                    } else if let errorMsg = viewModel.errorMessage {
-                        Text(errorMsg)
-                            .font(.system(size: 16).bold())
-                            .foregroundColor(.red)
-                            .multilineTextAlignment(.center)
                     } else if (!viewModel.reviewsForCurrentFood.isEmpty) {
-                        
-                        
                         List(viewModel.currentFoodReviewsSortedByMostRecent) { review in
                             ReviewView(review: review)
                                 .environmentObject(viewModel)
@@ -85,6 +80,28 @@ struct FoodDetailView: View {
                                         }
                                     }
                                 }
+                        }
+                        .refreshable {
+                            await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
+                        }
+                        .listStyle(.inset)
+                        .padding(.leading, -20)
+                        .scrollContentBackground(.hidden)
+                    } else if let _ = viewModel.errorMessage {
+                        List {
+                            HStack {
+                                Spacer()
+                                Text("An error occurred, pull down to refresh and try again")
+                                    .foregroundColor(.red)
+                                    .multilineTextAlignment(.center)
+                                    .font(.headline)
+                                    .padding(.top, 5)
+                                    
+                                Spacer()
+                            }
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
+                            
                         }
                         .refreshable {
                             await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
@@ -123,9 +140,24 @@ struct FoodDetailView: View {
                 .environmentObject(viewModel)
                 .environmentObject(authModel)
         }
+        .onChange(of: viewModel.errorMessage) { val in
+            guard let msg = val else { return }
+            showsErrorAlert = true
+            capturedErrorMsg = msg
+        }
+        .alert(isPresented: $showsErrorAlert) {
+            Alert(
+                title: Text("Error"),
+                message: Text(capturedErrorMsg)
+            )
+        }
         .onAppear {
             if let upToDateFood = viewModel.foodFromID(foodId: food.foodId) {
                 self.food = upToDateFood
+            }
+            if let msg = viewModel.errorMessage {
+                showsErrorAlert = true
+                capturedErrorMsg = msg
             }
         }
     }
