@@ -29,7 +29,7 @@ struct HomeView: View {
     private let viewOptions = ["All Food", "Trending"]
     @State private var currentViewSelection = "All Food"
     @State private var showingFoodRec = false
-        
+    
     
     @ViewBuilder
     private func FoodCellButton(food: Food) -> some View {
@@ -143,6 +143,13 @@ struct HomeView: View {
                             .foregroundColor(.red)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal)
+                        Button("Try Again") {
+                            Task {
+                                await viewModel.fetchAllFoods()
+                            }
+                        }
+                        .tint(.blue)
+                        .buttonStyle(.borderedProminent)
                     }
                     else if (foods.isEmpty && searchText.isEmpty) {
                         Text("No foods meet your criteria, try changing it.")
@@ -271,7 +278,7 @@ struct HomeView: View {
                 }
                 
                 ProfileButton()
-
+                
                 AddFoodButton()
                 
                 FilterButton()
