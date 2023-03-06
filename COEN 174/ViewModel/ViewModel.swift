@@ -30,6 +30,7 @@ class ViewModel: ObservableObject {
     
     
     static private let errorMessagePersistanceDuration = 3.0
+    private var persistingErrorMessage = false
     
     func testErrorMessage() {
         presentTempErrorMsg("Testing", duration: 10.0)
@@ -39,11 +40,16 @@ class ViewModel: ObservableObject {
         DispatchQueue.main.async { [weak self] in
             withAnimation(.easeIn) {
                 self?.errorMessage = msg
+                self?.persistingErrorMessage = true
             }
         }
     }
     
     private func presentTempErrorMsg(_ msg: String, duration: Double = errorMessagePersistanceDuration) {
+        guard self.persistingErrorMessage == false else {
+            print("Error message is being persisted, will not be changed.")
+            return
+        }
         DispatchQueue.main.async { [weak self] in
             withAnimation(.easeIn) {
                 self?.errorMessage = msg
@@ -51,6 +57,10 @@ class ViewModel: ObservableObject {
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) { [weak self] in
+            guard self?.persistingErrorMessage == false else {
+                print("Error message is being persisted, will not reset.")
+                return
+            }
             withAnimation(.easeOut) {
                 self?.errorMessage = nil
             }
@@ -87,6 +97,7 @@ class ViewModel: ObservableObject {
         if let reviews = apiModel.foodReviews[foodId], !refreshing { //utilize run-time cache held by APIModel
             DispatchQueue.main.async {
                 self.reviewsForCurrentFood = reviews
+                self.fetchingReviews = false
             }
             print("Using existing data!")
             return
@@ -106,6 +117,11 @@ class ViewModel: ObservableObject {
             case .failure(let error):
                 print("Failed with error: \(error)")
                 self?.presentPersistentErrorMessage("An error occurred, please try again later and check your connection.")
+                DispatchQueue.main.async { [weak self] in
+                    withAnimation(.easeIn) {
+                        self?.fetchingReviews = false
+                    }
+                }
             }
         })
     }
@@ -129,7 +145,11 @@ class ViewModel: ObservableObject {
             case .failure(let error):
                 print("Getting user reviews failed with error: \(error)")
                 self.presentTempErrorMsg("An error occurred getting your reviews. Try again later.")
-                
+                DispatchQueue.main.async { [weak self] in
+                    withAnimation(.easeIn) {
+                        self?.fetchingUserReviews = false
+                    }
+                }
             }
             
         })
@@ -142,7 +162,9 @@ class ViewModel: ObservableObject {
                 print("Succesfully updated food: \(food)")
                 self?.objectWillChange.send()
             case .failure(let error):
-                self?.presentTempErrorMsg("An error occurred updating food info.")
+                if self?.errorMessage == nil {
+                    self?.presentTempErrorMsg("An error occurred updating food info.")
+                }
                 print("Error updating food: \(error)")
             }
         }
@@ -167,6 +189,9 @@ class ViewModel: ObservableObject {
             case .failure(let error):
                 print("Error removing food: \(error)")
                 self?.presentTempErrorMsg("Failed to remove food, try again later.")
+                DispatchQueue.main.async { [weak self] in
+                    self?.removingFood = false
+                }
             }
         }
     }
@@ -193,6 +218,9 @@ class ViewModel: ObservableObject {
             case .failure(let error):
                 print("Error removing review: \(error)")
                 self?.presentTempErrorMsg("Failed to remove review, try again later.")
+                DispatchQueue.main.async { [weak self] in
+                    self?.removingReview = false
+                }
             }
         }
     }
@@ -216,8 +244,6 @@ class ViewModel: ObservableObject {
             case .failure(let error):
                 print("Failed to get foods with error: \(error)")
                 self?.presentPersistentErrorMessage("An error occurred, please try again later and check your connection.")
-                
-                
             }
         })
     }
@@ -242,7 +268,12 @@ class ViewModel: ObservableObject {
                 }
             case .failure(let err):
                 print("Failed with error: \(err)")
-                self?.presentTempErrorMsg("Error fetching food rec!", duration: 1.0)
+                //self?.presentTempErrorMsg("Error fetching food rec!", duration: 1.0)
+                DispatchQueue.main.async { [weak self] in
+                    withAnimation(.easeIn) {
+                        self?.fetchingFoodRec = false
+                    }
+                }
             }
         }
     }

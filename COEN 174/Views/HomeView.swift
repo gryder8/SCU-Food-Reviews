@@ -35,7 +35,7 @@ struct HomeView: View {
     private func FoodCellButton(food: Food) -> some View {
         Button {
             Task {
-                await viewModel.queryReviewsForFoodFromServer(with: food.foodId, refreshing: true)
+                await viewModel.queryReviewsForFoodFromServer(with: food.foodId)
             }
             Task {
                 await viewModel.updateInfoForFood(foodId: food.foodId)
@@ -224,12 +224,7 @@ struct HomeView: View {
                         .scrollContentBackground(.hidden)
                         .transition(.opacity)
                         //MARK: - Nav Destination
-                        .navigationDestination(for: Food.self) { food in
-                            FoodDetailView(food: food)
-                                .environmentObject(navModel)
-                                .environmentObject(viewModel)
-                                .environmentObject(authModel)
-                        }
+                        
                         
                         .listStyle(.inset)
                         .padding()
@@ -258,6 +253,12 @@ struct HomeView: View {
         }
         .navigationDestination(for: ShowProfileView.self) { _ in
             ProfileView()
+                .environmentObject(navModel)
+                .environmentObject(viewModel)
+                .environmentObject(authModel)
+        }
+        .navigationDestination(for: Food.self) { food in
+            FoodDetailView(food: food)
                 .environmentObject(navModel)
                 .environmentObject(viewModel)
                 .environmentObject(authModel)

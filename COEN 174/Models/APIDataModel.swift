@@ -208,8 +208,6 @@ class APIDataModel: ObservableObject {
             let data = try JSONSerialization.data(withJSONObject: jsonDict)
                         
             URLSession.shared.uploadTask(with: request, from: data) { (responseData, response, error) in
-                //let result: Result<[Review], Error>
-                
                 self.handleResponse(error, response, completion, logAction: print("Invalid response code for get reviews for food with id: \(foodID)"))
                 
                 guard let responseData = responseData else { return }
